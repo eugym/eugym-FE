@@ -65,7 +65,7 @@ export default function LoginForm() {
           <span className="mt-4">
             don't have an account?{" "}
             <a
-              href="/registration"
+              href="/auth/registration"
               className="text-primary-lite hover:underline"
             >
               {" "}
