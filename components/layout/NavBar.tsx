@@ -28,7 +28,7 @@ export default function Navbar({
   navLinks,
   // primaryAction = { label: "Login", href: "/login" },
   // secondaryAction = { label: "Sign-up", href: "/registration" },
-  primaryAction = { label: "Login", href: "/login" },
+  primaryAction = { label: "Login", href: "auth/login" },
   secondaryAction = {
     label: "Sign-up",
     href: "https://forms.gle/vpvqG2h8sun2mAp97",
@@ -39,7 +39,7 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-20">
-      <nav className="flex justify-between items-center px-6 md:px-10 py-4">
+      <nav className="flex justify-between items-center px-4 md:px-10 py-1">
         {/* Logo */}
         {logo}
 
