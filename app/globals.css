@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* section {
+  scroll-margin-top: 80px;
+} */
+/* :root {
+  --background: #ffffff;
+  --foreground: #171717;
+} */
+
+:root {
+  --text-base: 1rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-heading: 1.5rem;
+
+  --color-gray: #d9d9d9;
+  --color-dark: #1e293b;
+  --color-yellow: #f4ca4e;
+  --color-main: #11BD09;
+
+  --font-weight-semibold: 600;
+}
+@theme {
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+    
+--font-roboto:"Roboto", "sans-serif" ;
+
+  --color-primary: #3ed36d;
+  --color-main: #11BD09;
+  --color-primary-lite: #28D320;
+  --color-dark: #1e293b;
+  --color-accent: #22c55e;
+  --color-yellow: #F4CA4E;
+  --color-gray: #d9d9d9
+
+  /* ... */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  /* ... */
+}
+
+@layer components {
+  .typography {
+    p {
+      font-size: var(--text-base);
+      color: var(--color-gray-700);
+    }
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-950);
+    }
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-950);
+    }
+  }
+}
