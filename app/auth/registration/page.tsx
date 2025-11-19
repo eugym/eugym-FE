@@ -16,24 +16,24 @@ export default function Register() {
   const [activeTab, setActiveTab] = useState("Account");
 
   return (
-    <div className="flex sm:min-h-screen h-full ">
-      <div className="absolute inset-0 lg:hidden">
+    <div className="flex sm:min-h-screen h-full">
+      {/* <div className="absolute inset-0 lg:hidden h-full">
         <Image
           src={Img}
           alt="Gym background"
           fill
-          className="object-cover opacity-99"
+          className="object-cover opacity-99 h-screen bg-accent "
         />
 
         <div className="absolute inset-0 bg-gray/95" />
-      </div>
+      </div> */}
       {/* Left Form Section */}
 
-      <div className="opacity-99 flex flex-col justify-center items-center w-full h-screen md:w-1/2 md:p-8 p-2 lg:p-20  ">
+      <div className="opacity-99 flex flex-col justify-center items-center w-full md:w-1/2 md:p-8 p-2 lg:p-2">
         {/* Logo */}
-        <div className="mb-2">
+        <div className="mb-1">
           <Link href="/">
-            <Image src={logo} alt="Eugym" width={120} height={50} />
+            <Image src={logo} alt="Eugym" width={200} />
           </Link>
         </div>
 
@@ -54,7 +54,7 @@ export default function Register() {
         />
 
         {/* Form Box */}
-        <div className=" w-full max-w-md inset-shadow-2xs mt-6 rounded-xl shadow-sm p-6 bg-black/10">
+        <div className=" w-full max-w-md inset-shadow-2xs mt-6 rounded-xl shadow-sm p-6 border border-gray bg-gray/10">
           {activeTab === "Account" ? (
             <>
               <h2 className="text-gray-800 font-medium mb-4">
@@ -91,6 +91,13 @@ export default function Register() {
             </>
           )}
         </div>
+
+        <div className="w-full flex text-center max-w-sm md:mt-5 mt-5 ">
+          <Button onClick={notify} className="w-full justify-self-center ">
+            Continue
+          </Button>
+        </div>
+
         <span className="mt-4">
           have an account?{" "}
           <a href="/auth/login" className="text-primary-lite hover:underline">
@@ -98,12 +105,6 @@ export default function Register() {
             Login
           </a>
         </span>
-
-        <div className="w-full flex text-center max-w-sm md:mt-5 mt-10 ">
-          <Button onClick={notify} className="w-full justify-self-center ">
-            Continue
-          </Button>
-        </div>
       </div>
 
       {/* Right Image Section */}

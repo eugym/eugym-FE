@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import navlogo from "@/public/asset/logo.png";
+import Eugymlogo from "@/public/asset/eugym_logo.png";
 import Image from "next/image";
 
 export interface NavLink {
@@ -22,7 +23,11 @@ interface NavbarProps {
 export default function Navbar({
   logo = (
     <div className="flex items-center space-x-2">
-      <Image src={navlogo} alt="logo" className="md:w-16 md:h-12 h-12 w-12" />
+      <Image
+        src={Eugymlogo}
+        alt="logo"
+        className="md:w-16 md:h-16 h-12 w-12 p-1"
+      />
     </div>
   ),
   navLinks,
@@ -38,11 +43,9 @@ export default function Navbar({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-20">
-      <nav className="flex justify-between items-center px-4 md:px-10 py-1">
-        {/* Logo */}
+    <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-12">
+      <nav className="flex justify-between items-center px-4 md:px-10 py-2">
         {logo}
-
         {/* Desktop Links */}
         <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
           {navLinks.map(({ name, href }) => {
