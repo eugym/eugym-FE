@@ -35,8 +35,8 @@ export default function Hero() {
           </p>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
             <Button
-              // onClick={() => setOpen(true)}
-              onClick={() => registrationLink(googleFormLink)}
+              onClick={() => setOpen(true)}
+              // onClick={() => registrationLink(googleFormLink)}
               variant="primary"
               className="w-[20rem]"
             >
