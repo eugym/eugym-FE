@@ -5,7 +5,6 @@ import Image from "next/image";
 import Img from "@/public/images/fitImg.png";
 import logo from "@/public/asset/logo.png";
 import Button from "@/components/ui/Button";
-
 import toast from "react-hot-toast";
 import Link from "next/link";
 const notify = () => toast.error("unavailable at the momment");
@@ -14,26 +13,26 @@ export default function LoginForm() {
   return (
     <>
       <div className="flex sm:min-h-screen h-full">
-        <div className="absolute inset-0 lg:hidden">
+        {/* <div className="absolute inset-0 lg:hidden">
           <Image
             src={Img}
             alt="Gym background"
             fill
             className="object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gray/80" />
-        </div>
+          <div className="absolute inset-0 bg-white/90 " />
+        </div> */}
         {/* Left Form Section */}
-        <div className="opacity-99 flex flex-col justify-center items-center w-full md:w-1/2 md:p-8 p-2 lg:p-20 h-screen">
+        <div className="opacity-99 flex flex-col justify-center items-center w-full md:w-1/2 md:p-8 p-2 lg:p-20  h-full py-1">
           {/* Logo */}
-          <div className="mb-6">
+          <div className="mb-1">
             <Link href="/">
-              <Image src={logo} alt="Eugym" width={120} height={50} />
+              <Image src={logo} alt="Eugym" width={200} />
             </Link>
           </div>
 
           {/* Welcome Text */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-2">
             <h1 className="text-3xl  font-semibold text-gray-800 ">
               Welcome Back
             </h1>
@@ -43,7 +42,7 @@ export default function LoginForm() {
           </div>
 
           {/* Form Box */}
-          <div className="w-full max-w-md inset-shadow-2xs mt-6 rounded-xl shadow-sm p-6 bg-black/10">
+          <div className="w-full max-w-md inset-shadow-2xs mt-3 rounded-xl shadow-sm p-6 border border-gray bg-gray/10">
             <>
               <h2 className="text-gray-800 font-medium mb-4">
                 Account Details
@@ -57,14 +56,21 @@ export default function LoginForm() {
                 />
                 <InputField label="Password" type="password" />
               </div>
-              <div className="mt-3 text-sm text-gray-500">
-                Need Help?{" "}
+              <div className="mt-5 text-sm text-gray-500">
+                Forgot Password?{" "}
                 <button className="text-gray-900 font-medium hover:underline">
-                  Contact Support
+                  Reset it here
                 </button>
               </div>
             </>
           </div>
+
+          <div className="w-full flex text-center max-w-sm mt-10">
+            <Button onClick={notify} className="w-full justify-self-center">
+              Continue
+            </Button>
+          </div>
+
           <span className="mt-4">
             don't have an account?{" "}
             <a
@@ -75,11 +81,6 @@ export default function LoginForm() {
               SignUp
             </a>
           </span>
-          <div className="w-full flex text-center max-w-sm mt-10">
-            <Button onClick={notify} className="w-full justify-self-center">
-              Continue
-            </Button>
-          </div>
         </div>
 
         {/* Right Image Section */}
