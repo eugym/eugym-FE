@@ -9,13 +9,14 @@ import logo from "@/public/asset/logo.png";
 import Button from "@/components/ui/Button";
 
 import toast from "react-hot-toast";
+import Link from "next/link";
 const notify = () => toast.error("unavailable at the momment");
 
 export default function Register() {
   const [activeTab, setActiveTab] = useState("Account");
 
   return (
-    <div className="flex sm:min-h-screen h-full bg-gray ">
+    <div className="flex sm:min-h-screen h-full ">
       <div className="absolute inset-0 lg:hidden">
         <Image
           src={Img}
@@ -31,12 +32,14 @@ export default function Register() {
       <div className="opacity-99 flex flex-col justify-center items-center w-full h-screen md:w-1/2 md:p-8 p-2 lg:p-20  ">
         {/* Logo */}
         <div className="mb-2">
-          <Image src={logo} alt="Eugym" width={120} height={50} />
+          <Link href="/">
+            <Image src={logo} alt="Eugym" width={120} height={50} />
+          </Link>
         </div>
 
         {/* Welcome Text */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">
+          <h1 className="text-3xl font-semibold text-gray-800">
             Welcome to Eugym
           </h1>
           <p className="text-gray-500 text-sm">

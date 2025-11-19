@@ -7,14 +7,14 @@ import HeroImg from "@/public/images/heroImg.png";
 import CreateAccountModal from "@/components/modals/createAccountModal";
 import { useState } from "react";
 
-const googleFormLink = "https://forms.gle/vpvqG2h8sun2mAp97";
+// const googleFormLink = "https://forms.gle/vpvqG2h8sun2mAp97";
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
 
-  const registrationLink = (url: string) => {
-    window.open(url, "_blank");
-  };
+  // const registrationLink = (url: string) => {
+  //   window.open(url, "_blank");
+  // };
   return (
     <>
       <section className="mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-5 items-center">
@@ -35,8 +35,8 @@ export default function Hero() {
           </p>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
             <Button
-              // onClick={() => setOpen(true)}
-              onClick={() => registrationLink(googleFormLink)}
+              onClick={() => setOpen(true)}
+              // onClick={() => registrationLink(googleFormLink)}
               variant="primary"
               className="w-[20rem]"
             >
