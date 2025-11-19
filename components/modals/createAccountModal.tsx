@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowRight, CircleUser, Users } from "lucide-react";
-// import Image from "next/image";
 import Modal from "./modal";
 
 interface CreateAccountModalProps {

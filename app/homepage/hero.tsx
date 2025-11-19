@@ -7,14 +7,14 @@ import HeroImg from "@/public/images/heroImg.png";
 import CreateAccountModal from "@/components/modals/createAccountModal";
 import { useState } from "react";
 
-const googleFormLink = "https://forms.gle/vpvqG2h8sun2mAp97";
+// const googleFormLink = "https://forms.gle/vpvqG2h8sun2mAp97";
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
 
-  const registrationLink = (url: string) => {
-    window.open(url, "_blank");
-  };
+  // const registrationLink = (url: string) => {
+  //   window.open(url, "_blank");
+  // };
   return (
     <>
       <section className="mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-5 items-center">
