@@ -10,6 +10,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   icon?: ReactNode;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -20,22 +21,24 @@ export default function Button({
   type = "button",
   icon,
   loading = false,
+  disabled,
 }: ButtonProps) {
+  const isDisabled = disabled || loading;
   const baseStyles =
     "px-5 py-2 rounded-md font-medium transition focus:outline-none flex items-center justify-center gap-2";
 
   const variantStyles =
     variant === "primary"
-      ? "bg-green-500 text-white hover:bg-green-600 disabled:bg-green-400"
-      : "border border-green-500 text-green-500 hover:bg-green-50 disabled:opacity-50";
+      ? "bg-green-500 text-white hover:bg-green-600 disabled:bg-green-400 disabled:text-gray-500 disabled:bg-green-700/50 "
+      : "border border-green-500 text-green-500 hover:bg-green-50 disabled:opacity-50 disabled:text-gray-400";
 
   return (
     <motion.button
       type={type}
       onClick={loading ? undefined : onClick} // disable click when loading
-      disabled={loading}
-      whileHover={{ scale: loading ? 1 : 1.05 }}
-      whileTap={{ scale: loading ? 1 : 0.95 }}
+      disabled={isDisabled}
+      whileHover={{ scale: isDisabled ? 1 : 1.05 }}
+      whileTap={{ scale: isDisabled ? 1 : 0.95 }}
       className={`${baseStyles} ${variantStyles} ${className}`}
     >
       {/* Loading Spinner */}

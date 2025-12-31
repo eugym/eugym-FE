@@ -1,6 +1,5 @@
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/NavBar";
-import Button from "@/components/ui/Button";
 import FitnessSection from "./fitnessSection";
 import Hero from "./hero";
 import PartnerSection from "./partnerSection";

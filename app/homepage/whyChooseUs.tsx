@@ -56,7 +56,7 @@ export default function WhyChooseSection() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl font-bold text-secondary mb-4"
         >
-          Why Choose <span className="text-primary">Eugym?</span>
+          Why Choose <span className="text-primary">Eugym fitness?</span>
         </motion.h2>
         <p className="text-gray-500  mx-auto mb-12 max-w-92">
           Nigeria&apos;s most comprehensive fitness ecosystem designed for your
