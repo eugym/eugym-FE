@@ -67,6 +67,13 @@ export const NAV_ITEMS_BY_ROLE: Record<Role, NavItem[]> = {
       href: "/dashboard/eventManagement",
       icon: <CalendarDays size={18} />,
     },
+
+    {
+      id: "insight",
+      label: "Insight Management",
+      href: "/dashboard/insightManagement",
+      icon: <CalendarDays size={18} />,
+    },
   ],
 
   AFFILIATE_PARTNER: [

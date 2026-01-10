@@ -47,7 +47,7 @@ const featuresBottom = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="py-20 bg-white text-center">
+    <section className="py-20 bg-white text-center " id="services">
       <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
         <motion.h2

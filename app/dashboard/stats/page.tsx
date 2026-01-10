@@ -4,7 +4,8 @@ import StandardDashboard from "../user/standard/page";
 import PremiumUser from "../user/premium/page";
 import { getUserRole } from "@/app/api/lib/role";
 import UnauthorizedPage from "@/components/UnauthorizedPage";
-// import PremiumUser from "@/app/user---/premiumUser";
+import Admin from "../admin/page";
+import UserDashboard from "../user/page";
 
 function Dashboardstats() {
   // const [role, setRole] = useState("admin");
@@ -17,13 +18,14 @@ function Dashboardstats() {
   const role = getUserRole();
   switch (role as string) {
     case "ADMIN":
-      return <div>admin</div>;
+      return <Admin />;
     case "AFFILIATE_PARTNER":
       return <div>affiliate</div>;
     case "TRAINER":
       return <div>trainer</div>;
     case "REGULAR":
-      return <Regular />;
+      // return <Regular />;
+      return <UserDashboard />;
     case "STANDARD":
       return <StandardDashboard />;
     case "PREMIUM":

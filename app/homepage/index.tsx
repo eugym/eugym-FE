@@ -12,9 +12,9 @@ export default function HomePage() {
     { name: "Home", href: "/" },
     { name: "Services", href: "#services" },
     { name: "Trainers", href: "#trainers" },
-    { name: "Events", href: "#events" },
+    // { name: "Events", href: "#events" },
     { name: "Store", href: "#store" },
-    { name: "Insights", href: "#insights" },
+    { name: "Insights", href: "homepage/insight" },
   ];
 
   return (

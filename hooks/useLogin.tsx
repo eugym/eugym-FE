@@ -9,11 +9,17 @@ import { setUserRole } from "@/app/api/lib/role";
 import axios from "axios";
 export function useLogin() {
   return useMutation({
-    mutationFn: async (payload: { email: string; password: string }) => {
-      const response = await api.post("/auth/login", payload);
+    mutationFn: async (payload: {
+      email: string;
+      password: string;
+      token?: string | null;
+    }) => {
+      const response = await api.post(
+        payload.token ? `/auth/login?token=${payload.token}` : `/auth/login`,
+        payload
+      );
       return response.data;
     },
-
     onSuccess: (data) => {
       const token = data?.data?.tokens?.accessToken;
       const user = data?.data?.user;

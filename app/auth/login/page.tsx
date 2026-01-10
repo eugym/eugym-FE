@@ -9,17 +9,20 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-// import { useLogin } from "@/hooks/useAuth";
 import { useLogin } from "@/hooks/useLogin";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
 export default function LoginForm() {
   const { mutateAsync: login, isPending: pending } = useLogin();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const urlToken = searchParams.get("token");
   const [form, setForm] = useState({
     email: "",
     password: "",
+    token: urlToken,
   });
 
   const handleChange = (name: string, value: string) => {

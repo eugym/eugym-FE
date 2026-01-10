@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import { Bell, Menu, X } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import Profile from "@/components/Profile";
@@ -7,7 +7,6 @@ import { getUserRole } from "@/app/api/lib/role";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthUser, getStoredUser } from "@/app/store/auth";
 import TrainerImage from "@/public/images/trainer1.png";
-// import { getUserRole } from "@/app/api/lib/role";
 
 interface IProps {
   isOpen: boolean;

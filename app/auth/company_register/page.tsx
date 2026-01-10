@@ -10,7 +10,6 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { useRegister } from "@/hooks/useRegister";
 import { useRegister } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -156,13 +155,34 @@ export default function ComapanyRegister() {
                   transition={{ delay: 0.8 }}
                   className="space-y-4"
                 >
-                  <InputField
-                    label="Phone number"
-                    placeholder="0903333333"
-                    type="number"
-                    value={form?.phoneNumber}
-                    onChange={(val) => handleChange("phoneNumber", val)}
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-5">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <InputField
+                        label="Phone number"
+                        placeholder="0903333333"
+                        type="number"
+                        value={form?.phoneNumber}
+                        onChange={(val) => handleChange("phoneNumber", val)}
+                      />{" "}
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <InputField
+                        label="Email Address"
+                        placeholder="example@gmail.com"
+                        type="email"
+                        value={form?.email}
+                        onChange={(val) => handleChange("email", val)}
+                      />
+                    </motion.div>
+                  </div>
 
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -203,24 +223,10 @@ export default function ComapanyRegister() {
             ) : (
               <>
                 <h2 className="text-gray-800 font-medium mb-4">
-                  Set Your Email & Password
+                  Set Your Password
                 </h2>
 
                 <div className="space-y-4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    <InputField
-                      label="Email Address"
-                      placeholder="example@gmail.com"
-                      type="email"
-                      value={form?.email}
-                      onChange={(val) => handleChange("email", val)}
-                    />
-                  </motion.div>
-
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

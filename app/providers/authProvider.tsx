@@ -25,22 +25,6 @@
 //   return <>{children}</>;
 // }
 
-// ******* new *****
-// "use client";
-
-// // import { useMe } from "@/app/api/hooks/useMe";
-// import { useMe } from "@/hooks/useMe";
-
-// export function AuthProvider({ children }: { children: React.ReactNode }) {
-//   const { isLoading } = useMe();
-
-//   if (isLoading) {
-//     return <div>Loading... here..</div>;
-//   }
-
-//   return <>{children}</>;
-// }
-
 "use client";
 
 import { useMe } from "@/hooks/useMe";

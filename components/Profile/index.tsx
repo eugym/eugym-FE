@@ -8,7 +8,7 @@ import { ChevronDown, User, KeyRound, LogOut } from "lucide-react";
 interface Props {
   fullName?: string;
   role: string;
-  avatarUrl: string | StaticImageData;
+  avatarUrl?: string | StaticImageData;
   onLogout: () => void;
 }
 
@@ -34,6 +34,7 @@ export default function Profile({
       document.removeEventListener("pointerdown", handleClickOutside);
   }, []);
 
+  const src = !avatarUrl ? "/images/avatar-placeholder.png" : avatarUrl;
   return (
     <div ref={ref} className="relative">
       {/* Trigger */}
@@ -43,13 +44,14 @@ export default function Profile({
       >
         <div className="flex flow-row gap-3 items-center align-middle mx-5">
           <Image
-            src={avatarUrl}
+            src={src}
             alt="Profile"
             width={60}
             height={60}
             className="rounded-full  hidden sm:block"
           />
-          <div className=" flex flex-col">
+          {/* <div className=" flex flex-col"> */}
+          <div className="flex flex-col" suppressHydrationWarning={true}>
             <span className="font-semibold">{fullName}</span>
             <span className="text-[12px] ">{role}</span>
           </div>
@@ -64,13 +66,13 @@ export default function Profile({
       {/* Dropdown */}
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-lg bg-white shadow-lg">
-          <MenuItem icon={<User size={16} />} href="/profile" label="Profile" />
+          <MenuItem icon={<User size={16} />} href="profile" label="Profile" />
 
-          <MenuItem
+          {/* <MenuItem
             icon={<KeyRound size={16} />}
             href="/update-password"
             label="Update Password"
-          />
+          /> */}
 
           <div className="my-1 h-px bg-gray-100" />
 
