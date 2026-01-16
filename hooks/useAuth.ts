@@ -4,14 +4,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // import api, { getAccessToken, setAccessToken } from "@/app/api/lib/api";
 import api from "@/app/api/lib/api";
-import { saveAuth, useAuthStore } from "@/app/store/auth";
-import type { LoginResponse, RegisterResponse, User } from "@/types/auth";
-import { getAccessToken, setAccessToken } from "@/app/api/lib/token";
-import { setUserRole } from "@/app/api/lib/role";
+import { useAuthStore } from "@/app/store/auth";
+import type { RegisterResponse } from "@/types/auth";
+import { setAccessToken } from "@/app/api/lib/token";
+// import { setUserRole } from "@/app/api/lib/role";
 import { useEffect, useState } from "react";
 import { AuthUser, getStoredUser } from "@/app/store/auth";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 export function useMe() {
   return useQuery({

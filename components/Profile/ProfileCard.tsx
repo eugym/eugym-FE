@@ -6,8 +6,6 @@ import ProfileForm from "./ProfileForm";
 export default function ProfileCard() {
   const { data, isLoading } = useProfile();
 
-  // console.log("Profile Data,", data?.data?.profile?.role);
-
   if (isLoading) {
     return (
       <div className="rounded-xl bg-white p-6 shadow-sm">

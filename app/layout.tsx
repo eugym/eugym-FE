@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { Providers } from "./api/providers";
+// import { Providers } from "./api/providers";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { QueryProvider } from "./api/lib/queryClient";
 import { AuthProvider } from "./providers/authProvider";
@@ -35,8 +35,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const qc = new QueryClient();
-  const dehydratedState = dehydrate(qc);
+  // const qc = new QueryClient();
+  // const dehydratedState = dehydrate(qc);
 
   if (typeof window !== "undefined") {
   }

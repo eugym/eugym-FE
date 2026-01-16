@@ -1,6 +1,5 @@
 import ArticleCard from "@/components/cards/ArticleCard";
 import Navbar from "@/components/layout/NavBar";
-import React from "react";
 import { articles } from "./data";
 
 const Insight = () => {
@@ -8,7 +7,6 @@ const Insight = () => {
     { name: "Home", href: "/" },
     { name: "Services", href: "/" },
     { name: "Trainers", href: "/" },
-    // { name: "Events", href: "#events" },
     { name: "Store", href: "/" },
     { name: "Insights", href: "#" },
   ];

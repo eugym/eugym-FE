@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getAccessToken } from "./token";
-import { isTokenExpired } from "@/app/utilities/isTokenExpired";
+// import { isTokenExpired } from "@/app/utilities/isTokenExpired";
 import { clearAuth } from "./auth-storage";
 
 const api = axios.create({

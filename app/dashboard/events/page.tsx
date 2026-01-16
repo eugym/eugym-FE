@@ -1,8 +1,8 @@
 "use client";
-import Image from "next/image";
 import { MapPin } from "lucide-react";
 import Tabs from "../components/tabs";
 import { useState } from "react";
+import FeatureUnavailable from "@/components/FeatureUnavailable/FeatureUnavailable";
 
 interface EventCardProps {
   date: string;
@@ -84,8 +84,18 @@ export default function Events() {
           </div>{" "}
         </>
       )}
-      {active === "free" && <> free events</>}
-      {active === "paid" && <> paid events</>}
+      {active === "free" && (
+        <>
+          {" "}
+          <FeatureUnavailable title="fee events" />
+        </>
+      )}
+      {active === "paid" && (
+        <>
+          {" "}
+          <FeatureUnavailable title="paid events" />
+        </>
+      )}
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { getAccessToken } from "./token";
 
-interface GetRequestConfig {
-  url: string;
-  auth?: boolean;
-}
+// interface GetRequestConfig {
+//   url: string;
+//   auth?: boolean;
+// }
 
 export async function getRequest({ queryKey }: QueryFunctionContext) {
   const [, url, auth] = queryKey;

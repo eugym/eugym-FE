@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { ChevronDown, User, KeyRound, LogOut } from "lucide-react";
+import { ChevronDown, User, LogOut } from "lucide-react";
 
 interface Props {
   fullName?: string;

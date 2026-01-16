@@ -8,7 +8,7 @@ import Button from "../ui/Button";
 export default function ProfileForm({ profile }: { profile: any }) {
   const [form, setForm] = useState(profile);
 
-  console.log("profile info", form);
+  // console.log("profile info", form);
 
   const { mutateAsync, isPending } = useUpdateProfile();
 

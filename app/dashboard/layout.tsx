@@ -4,9 +4,9 @@ import SideNav from "./components/sideNav";
 import { useState } from "react";
 import TopNav from "./components/topNav";
 import ProtectedRoute from "../auth/ProtectedRoute";
-import { useAuthStore } from "@/app/store/auth";
+// import { useAuthStore } from "@/app/store/auth";
 import { getUserRole } from "../api/lib/role";
-import { UserRole } from "@/types/user";
+// import { UserRole } from "@/types/user";
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }

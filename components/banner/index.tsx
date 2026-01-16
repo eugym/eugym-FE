@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
+import { X } from "lucide-react";
 
 type BannerVariant = "info" | "success" | "warning" | "error";
 
@@ -9,6 +10,7 @@ interface BannerProps {
   icon?: ReactNode;
   actionText?: string;
   onAction?: () => void;
+  onClose?: () => void; // ✅ NEW
   variant?: BannerVariant;
   className?: string;
 }
@@ -26,13 +28,14 @@ export default function Banner({
   icon,
   actionText,
   onAction,
+  onClose,
   variant = "info",
   className,
 }: BannerProps) {
   return (
     <div
       className={clsx(
-        "flex flex-col sm:flex-row items-start sm:items-center gap-4 border rounded-xl p-2",
+        "flex flex-col sm:flex-row items-start sm:items-center gap-4 border rounded-xl p-2 relative",
         variantStyles[variant],
         className
       )}
@@ -45,15 +48,27 @@ export default function Banner({
           <p className="text-sm opacity-80 mt-1">{description}</p>
         )}
       </div>
+      <div className="flex flex-row justify-between w-full sm:w-48">
+        {actionText && onAction && (
+          <button
+            onClick={onAction}
+            className="text-sm font-medium px-8 py-2 rounded-lg bg-white/80 hover:bg-white transition"
+          >
+            {actionText}
+          </button>
+        )}
 
-      {actionText && onAction && (
-        <button
-          onClick={onAction}
-          className="text-sm font-medium px-4 py-2 rounded-lg bg-white/80 hover:bg-white transition"
-        >
-          {actionText}
-        </button>
-      )}
+        {/* Close icon — does NOT affect layout */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className=" rounded-md hover:bg-black/5 transition"
+            aria-label="Close banner"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

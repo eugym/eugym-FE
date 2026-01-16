@@ -2,7 +2,7 @@
 
 import api from "@/app/api/lib/api";
 import { setAccessToken } from "@/app/api/lib/token";
-import { getStoredUser, saveAuth, useAuthStore } from "@/app/store/auth";
+import { saveAuth } from "@/app/store/auth";
 import { useMutation } from "@tanstack/react-query";
 import { setUserRole } from "@/app/api/lib/role";
 

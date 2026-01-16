@@ -1,7 +1,6 @@
 "use client";
 import { ITableBody, ITableHead, Table } from "@/components/table";
 import Button from "@/components/ui/Button";
-import React from "react";
 import Image from "next/image";
 import img from "@/public/images/Sport Bra.jpg";
 import img2 from "@/public/images/joggers.jpg";
@@ -134,7 +133,7 @@ function machandise() {
         dropdownOptions={dropdownOptions}
         handleActionClicked={handleActionClicked}
         /* Pagination */
-        showPagination={true}
+
         // pageCount={10}
         // onNextPage={(page) => console.log("Next page:", page)}
         // onPerPageChange={(perPage) => console.log("Per page changed:", perPage)}

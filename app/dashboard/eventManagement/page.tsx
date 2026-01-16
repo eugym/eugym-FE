@@ -1,7 +1,6 @@
 "use client";
 import { ITableBody, ITableHead, Table } from "@/components/table";
 import Button from "@/components/ui/Button";
-import React from "react";
 
 function EventManagement() {
   const headers: ITableHead[] = [
@@ -91,24 +90,16 @@ function EventManagement() {
         <Button> Create Events</Button>
       </div>
       <Table
-        /* Core */
         headers={headers}
         body={body}
         /* UI */
         title="Total Event"
         subTitle="75 events"
-        // loading={loading}
-        /* Serial Number */
         showSerialNumber={true}
         /* Dropdown */
         showDropdown={true}
         dropdownOptions={dropdownOptions}
         handleActionClicked={handleActionClicked}
-        /* Pagination */
-        showPagination={true}
-        // pageCount={10}
-        // onNextPage={(page) => console.log("Next page:", page)}
-        // onPerPageChange={(perPage) => console.log("Per page changed:", perPage)}
       />
     </>
   );

@@ -11,12 +11,11 @@ import { useGetQuery } from "@/hooks/useGetQuery";
 import { IUser } from "@/types/userTableData";
 
 function userManagement() {
-  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [openRegisterUser, setOpenRegisterUser] = useState(false);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [mounted, setMounted] = useState(false);
+  // const [mounted, setMounted] = useState(false);
 
   const { data, isLoading, error } = useGetQuery("user/all");
 
@@ -34,8 +33,6 @@ function userManagement() {
   const userlist = useMemo(() => {
     return mapUsersToTableBody(data?.data?.allUser?.users || []);
   }, [data]);
-
-  console.log("userlist", userlist);
 
   // ******* to get table data *****
   interface User {

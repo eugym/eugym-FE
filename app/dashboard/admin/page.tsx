@@ -3,7 +3,6 @@ import StatCard from "../components/cards/statsCard";
 import RevenueBarChart from "../components/charts/RevenueBarChart";
 import UsersPieChart from "../components/charts/UsersPieChart";
 import { Users, UserCheck, Repeat, CreditCard, DollarSign } from "lucide-react";
-import { TableBody } from "@mui/material";
 
 export default function Admin() {
   const headers: ITableHead[] = [

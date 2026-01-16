@@ -1,4 +1,5 @@
 import InputField from "@/components/inputs/input";
+import SelectInput, { SelectOption } from "@/components/inputs/select";
 import Button from "@/components/ui/Button";
 import { useFormMutation } from "@/hooks/useFormMutation";
 import axios from "axios";
@@ -6,16 +7,26 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
+const roleOptions: SelectOption[] = [
+  { label: "Regular", value: "REGULAR" },
+  { label: "Standard", value: "STANDARD" },
+  { label: "Premium", value: "PREMIUM" },
+];
+
 interface RegUserProps {
   onSuccess: () => void;
 }
+
+const initialFormState = {
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  email: "",
+  role: "",
+};
+
 function RegisterUser({ onSuccess }: RegUserProps) {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-  });
+  const [form, setForm] = useState(initialFormState);
 
   const handleChange = (name: string, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -37,10 +48,12 @@ function RegisterUser({ onSuccess }: RegUserProps) {
     InviteUserPayload,
     InviteUserResponse
   >({
-    url: "invite/regular",
+    url: "invite/user",
     method: "POST",
     onSuccess: (data) => {
       toast.success(data.message || "Invitation sent successfully");
+      setForm(initialFormState);
+
       onSuccess();
     },
 
@@ -57,15 +70,25 @@ function RegisterUser({ onSuccess }: RegUserProps) {
           data: error.response?.data,
         });
       } else {
-        console.error("Unexpected error:", error);
+        console.error(
+          "Unexpected error: check the detials and try again",
+          error
+        );
       }
     },
   });
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.firstName || !form.lastName || !form.email || !form.phoneNumber) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.phoneNumber ||
+      !form.role
+    ) {
       toast.error("Please fill all fields");
+      setForm(initialFormState);
       return;
     }
     await inviteUserMutation.mutateAsync(form);
@@ -106,7 +129,19 @@ function RegisterUser({ onSuccess }: RegUserProps) {
             value={form?.email}
             onChange={(val) => handleChange("email", val)}
           />
-          <Button className="mt-4" type="submit">
+
+          <SelectInput
+            label="Role"
+            name="role"
+            value={form.role}
+            options={roleOptions}
+            onChange={handleChange}
+          />
+          <Button
+            className="mt-4"
+            type="submit"
+            loading={inviteUserMutation.isPending}
+          >
             {inviteUserMutation.isPending ? "Registering..." : "Register User"}
           </Button>
         </form>
