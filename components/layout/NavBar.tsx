@@ -7,6 +7,8 @@ import { useState } from "react";
 import navlogo from "@/public/asset/logo.png";
 import Eugymlogo from "@/public/asset/eugym_logo.png";
 import Image from "next/image";
+import CreateAccountModal from "../modals/createAccountModal";
+import clsx from "clsx";
 
 export interface NavLink {
   name: string;
@@ -31,8 +33,7 @@ export default function Navbar({
     </div>
   ),
   navLinks,
-  // primaryAction = { label: "Login", href: "/login" },
-  // secondaryAction = { label: "Sign-up", href: "/registration" },
+
   primaryAction = { label: "Login", href: "auth/login" },
   secondaryAction = {
     label: "Sign-up",
@@ -41,111 +42,117 @@ export default function Navbar({
 }: NavbarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [openModal, setOpenModal] = useState(false);
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-12">
-      <nav className="flex justify-between items-center px-4 md:px-10 py-2">
-        {logo}
-        {/* Desktop Links */}
-        <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
-          {navLinks.map(({ name, href }) => {
-            const isActive = pathname === href;
-            return (
-              <motion.li
-                key={name}
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Link
-                  href={href}
-                  className={`transition-colors duration-200 ${
-                    isActive
-                      ? "text-green-600 font-semibold border-b-2 border-green-500 pb-1"
-                      : "hover:text-green-500"
-                  }`}
+    <>
+      <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-12">
+        <nav className="flex justify-between items-center px-4 md:px-10 py-2 ">
+          {logo}
+          {/* Desktop Links */}
+          <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
+            {navLinks.map(({ name, href }) => {
+              const isActive = pathname === href;
+              return (
+                <motion.li
+                  key={name}
+                  whileHover={{ y: -2 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  {name}
-                </Link>
-              </motion.li>
-            );
-          })}
-        </ul>
+                  <Link
+                    href={href}
+                    className={`transition-colors duration-200 ${
+                      isActive
+                        ? "text-green-600 font-semibold border-b-2 border-green-500 pb-1"
+                        : "hover:text-green-500"
+                    }`}
+                  >
+                    {name}
+                  </Link>
+                </motion.li>
+              );
+            })}
+          </ul>
 
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex items-center space-x-3">
-          <Link
-            href={primaryAction.href}
-            className="px-5 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 transition"
-          >
-            {primaryAction.label}
-          </Link>
-          <Link
-            href={secondaryAction.href}
-            className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-          >
-            {secondaryAction.label}
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-2xl focus:outline-none"
-        >
-          {isOpen ? "✖" : "☰"}
-        </button>
-      </nav>
-
-      {/* Mobile Dropdown */}
-      <motion.div
-        className={`md:hidden bg-white border-t shadow-md overflow-hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <ul className="flex flex-col space-y-4 p-6 text-gray-700 font-medium">
-          {navLinks.map(({ name, href }) => {
-            const isActive = pathname === href;
-            return (
-              <li key={name}>
-                <Link
-                  href={href}
-                  target="_blank"
-                  onClick={() => setIsOpen(false)}
-                  className={`block transition-colors duration-200 ${
-                    isActive
-                      ? "text-green-600 font-semibold"
-                      : "hover:text-green-500"
-                  }`}
-                >
-                  {name}
-                </Link>
-              </li>
-            );
-          })}
-          <li>
+          {/* Desktop Buttons */}
+          <div className="hidden md:flex items-center space-x-3">
             <Link
               href={primaryAction.href}
-              className="block text-center border border-green-500 text-green-500 rounded-md py-2 hover:bg-green-50"
-              onClick={() => setIsOpen(false)}
+              className="px-5 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 transition"
             >
               {primaryAction.label}
             </Link>
-          </li>
-          <li>
-            <Link
-              href={secondaryAction.href}
-              className="block text-center bg-green-500 text-white rounded-md py-2 hover:bg-green-600"
-              onClick={() => setIsOpen(false)}
-              target="_blank"
+            <button
+              onClick={() => setOpenModal(true)}
+              className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
             >
               {secondaryAction.label}
-            </Link>
-          </li>
-        </ul>
-      </motion.div>
-    </header>
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-2xl focus:outline-none"
+          >
+            {isOpen ? "✖" : "☰"}
+          </button>
+        </nav>
+
+        {/* Mobile Dropdown */}
+
+        <motion.div
+          className={`md:hidden shadow-md overflow-hidden fixed inset-0 bg-black/70 transition-opacity z-40 ${
+            isOpen ? "block" : "hidden"
+          }`}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          onClick={() => setIsOpen(false)}
+        >
+          <ul className="flex flex-col space-y-4 p-6 text-gray-700 font-medium bg-white">
+            {navLinks.map(({ name, href }) => {
+              const isActive = pathname === href;
+              return (
+                <li key={name}>
+                  <Link
+                    href={href}
+                    // target="_blank"
+                    onClick={() => setIsOpen(false)}
+                    className={`block transition-colors duration-200 ${
+                      isActive
+                        ? "text-green-600 font-semibold"
+                        : "hover:text-green-500"
+                    }`}
+                  >
+                    {name}
+                  </Link>
+                </li>
+              );
+            })}
+            <li>
+              <Link
+                href={primaryAction.href}
+                className="block text-center border border-green-500 text-green-500 rounded-md py-2 hover:bg-green-50"
+                onClick={() => setIsOpen(false)}
+              >
+                {primaryAction.label}
+              </Link>
+            </li>
+            <li>
+              <button
+                className="block text-center bg-green-500 text-white rounded-md py-2 hover:bg-green-600 w-full"
+                onClick={() => setOpenModal(true)}
+              >
+                {secondaryAction.label}
+              </button>
+            </li>
+          </ul>
+        </motion.div>
+      </header>
+      <CreateAccountModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+      />
+    </>
   );
 }

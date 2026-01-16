@@ -38,7 +38,6 @@ export default function Modal({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm "
-            onClick={onClose}
           />
 
           {/* Modal Box */}
@@ -48,6 +47,7 @@ export default function Modal({
             exit={{ scale: 0.9, opacity: 0, y: 50 }}
             transition={{ type: "spring", damping: 20, stiffness: 250 }}
             className={`fixed z-50 inset-0 flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm`}
+            onClick={onClose}
           >
             <div
               className={`relative w-full ${widthClass} bg-white rounded-2xl shadow-xl`}

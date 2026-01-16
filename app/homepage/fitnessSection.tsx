@@ -69,8 +69,8 @@ export default function FitnessSection() {
           >
             <Button
               variant="secondary"
-              // onClick={() => setOpen(true)}
-              onClick={() => registrationLink(googleFormLink)}
+              onClick={() => setOpen(true)}
+              // onClick={() => registrationLink(googleFormLink)}
               className="bg-white text-primary hover:bg-green-100 text-base px-6 py-3 rounded-lg font-semibold flex justify-center justify-self-center"
             >
               Join For Free
