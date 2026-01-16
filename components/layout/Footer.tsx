@@ -10,7 +10,9 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         {/* Column 1 */}
         <div>
-          <h3 className="text-white text-xl font-semibold mb-3">Eugym</h3>
+          <h3 className="text-white text-xl font-semibold mb-3">
+            Eugym Fitness
+          </h3>
           <p className="text-sm leading-relaxed text-gray-400">
             Nigeria&apos;s premier fitness network connecting you to premium
             gyms, expert trainers, and wellness experiences nationwide.
@@ -81,12 +83,16 @@ export default function Footer() {
             </li>
             <li className="flex items-center space-x-2">
               <Mail size={16} className="text-green-400" />
+              <span>eugymfitness@gmail.com</span>
+            </li>
+            <li className="flex items-center space-x-2">
+              <Mail size={16} className="text-green-400" />
               <span>support@eugymfitness.com</span>
             </li>
             <li className="flex items-start space-x-2">
               <MapPin size={16} className="text-green-400 mt-0.5" />
               <span>
-                Plot 123, Victoria Island <br /> Lagos, Nigeria
+                Beside NUT head office, ACO Estate <br /> Abuja, Nigeria
               </span>
             </li>
           </ul>

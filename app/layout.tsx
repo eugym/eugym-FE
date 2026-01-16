@@ -1,7 +1,12 @@
+import "@/app/api/lib/initToken";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+// import { Providers } from "./api/providers";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { QueryProvider } from "./api/lib/queryClient";
+import { AuthProvider } from "./providers/authProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 const roboto = Roboto({
-  subsets: ["latin"], // include character sets
-  weight: ["400", "500", "700"], // optional: choose weights
-  variable: "--font-roboto", // optional CSS variable name
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
 });
 
 export const metadata: Metadata = {
@@ -30,6 +35,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const qc = new QueryClient();
+  // const dehydratedState = dehydrate(qc);
+
+  if (typeof window !== "undefined") {
+  }
   return (
     <>
       <Toaster />
@@ -38,7 +48,12 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {children}
+          {/* {children} */}
+          {/* <Providers>{children}</Providers> */}
+          {/* <Providers dehydratedState={dehydratedState}>{children}</Providers> */}
+          <QueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </QueryProvider>
         </body>
       </html>
     </>

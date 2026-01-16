@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowRight, CircleUser, Users } from "lucide-react";
+import { ArrowRight, CircleUser, Users, X } from "lucide-react";
 import Modal from "./modal";
-
+import Image from "next/image";
 interface CreateAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-const link = "https://forms.gle/vpvqG2h8sun2mAp97";
+// const link = "https://forms.gle/vpvqG2h8sun2mAp97";
 export default function CreateAccountModal({
   isOpen,
   onClose,
@@ -26,22 +26,25 @@ export default function CreateAccountModal({
         <div className="flex -space-x-2">
           {/* <Image
             src="/avatars/avatar1.png"
-            // alt="avatar"
+            alt="avatar"
             width={32}
             height={32}
             className="rounded-full border-1 border-white"
           /> */}
         </div>
-        <button onClick={onClose} className="text-sm font-medium  ">
-          Close
+        <button
+          onClick={onClose}
+          className="text-sm font-medium hover:text-red-500 transition hover:cursor-pointer   "
+        >
+          <X />
         </button>
       </div>
 
       <div className="p-6">
-        <h2 className="text-xl font-semibold text-gray-800">Create Account</h2>
-        <p className="text-gray-500 text-sm mb-4">Choose Your Account Type:</p>
-        <a href={link}>
-          <button className="w-full flex justify-between items-center p-4 border rounded-xl mb-3 hover:bg-gray-50 transition ">
+        <h2 className="text-2xl font-semibold text-gray-800">Create Account</h2>
+        <p className="text-gray-500 text-sm mb-6">Choose Your Account Type:</p>
+        <a href={"/auth/user_register"}>
+          <button className="w-full flex justify-between items-center p-4 border border-gray-300 rounded-xl mb-3 hover:bg-gray-50 transition ">
             <div className="flex items-start space-x-3">
               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
                 <CircleUser width={20} height={20} />
@@ -58,8 +61,8 @@ export default function CreateAccountModal({
             <ArrowRight size={18} className="text-gray-400" />
           </button>
         </a>
-        <a href={link}>
-          <button className="w-full flex justify-between items-center p-4 border rounded-xl mb-3 hover:bg-gray-50 transition">
+        <a href={"/auth/company_register"}>
+          <button className="w-full flex justify-between items-center p-4 border border-gray-300 rounded-xl mb-3 hover:bg-gray-50 transition">
             <div className="flex items-start space-x-3">
               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
                 <Users width={20} height={20} />
