@@ -55,7 +55,7 @@ export default function ComapanyRegister() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-white"
+      className="flex flex-col md:flex-row w-full overflow-hidden bg-white"
     >
       {/* LEFT FORM SECTION */}
       <motion.div
@@ -83,8 +83,8 @@ export default function ComapanyRegister() {
           transition={{ delay: 0.3 }}
           className="text-center mb-6 "
         >
-          <h1 className="text-3xl font-semibold text-gray-800">
-            Welcome to Eugym
+          <h1 className="sm:text-3xl text-2xl font-semibold text-gray-800">
+            Welcome to Eugym Fitness
           </h1>
           <p className="text-gray-500 text-sm">
             Please complete your registration.
