@@ -40,25 +40,24 @@ export default function Profile({
       {/* Trigger */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center sm:justify-between justify-end gap-2 rounded-lg sm:px-2 px-1 py-1 hover:bg-gray-100  min-w-40"
+        className="flex items-center sm:justify-betweens justify-ends gap-1 rounded-lg sm:px-1 px-1 hover:bg-gray-100"
       >
-        <div className="flex flow-row gap-3 items-center align-middle mx-5">
-          <Image
-            src={src}
-            alt="Profile"
-            width={60}
-            height={60}
-            className="rounded-full  hidden sm:block"
-          />
-          {/* <div className=" flex flex-col"> */}
-          <div className="flex flex-col" suppressHydrationWarning={true}>
-            <span className="font-semibold">{fullName}</span>
-            <span className="text-[12px] ">{role}</span>
+        <div className="flex flow-row gap-3 items-center align-middle mx-2">
+          <Image src={src} alt="Profile" className="rounded-full w-8 h-8 " />
+
+          <div
+            className="flex-col hidden sm:block "
+            suppressHydrationWarning={true}
+          >
+            <div className="flex flex-col">
+              <span className="font-semibold">{fullName}</span>
+              <span className="text-[12px] ">{role}</span>
+            </div>
           </div>
         </div>
 
         <ChevronDown
-          size={16}
+          // size={16}
           className={`transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
@@ -66,13 +65,13 @@ export default function Profile({
       {/* Dropdown */}
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-lg bg-white shadow-lg">
+          <div className="p-2 pl-4 block sm:hidden shadow-sm">
+            <div className="flex flex-col">
+              <span className="font-semibold">{fullName}</span>
+              <span className="text-[12px] ">{role}</span>
+            </div>
+          </div>
           <MenuItem icon={<User size={16} />} href="profile" label="Profile" />
-
-          {/* <MenuItem
-            icon={<KeyRound size={16} />}
-            href="/update-password"
-            label="Update Password"
-          /> */}
 
           <div className="my-1 h-px bg-gray-100" />
 

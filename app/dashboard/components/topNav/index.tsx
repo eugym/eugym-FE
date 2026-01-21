@@ -3,9 +3,9 @@
 import { Bell, Menu, X } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import Profile from "@/components/Profile";
-import { getUserRole } from "@/app/api/lib/role";
-import { useAuth } from "@/hooks/useAuth";
-import { AuthUser, getStoredUser } from "@/app/store/auth";
+// import { getUserRole } from "@/app/api/lib/role";
+// import { useAuth } from "@/hooks/useAuth";
+import { getStoredUser } from "@/app/store/auth";
 import TrainerImage from "@/public/images/trainer1.png";
 
 interface IProps {
@@ -30,13 +30,13 @@ export default function TopBar({ isOpen, setIsOpen }: IProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2">
         <button className="relative">
           <Bell size={20} className="text-gray-600" />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
-        <div className="flex items-center gap-6 mr-5">
+        <div className="flex items-center gap-1 mr-2">
           <Profile
             fullName={user?.fullName}
             role={user?.role as string}
