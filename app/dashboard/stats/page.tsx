@@ -6,6 +6,7 @@ import { getUserRole } from "@/app/api/lib/role";
 import UnauthorizedPage from "@/components/UnauthorizedPage";
 import Admin from "../admin/page";
 import UserDashboard from "../user/page";
+import FeatureUnavailable from "@/components/FeatureUnavailable/FeatureUnavailable";
 
 function Dashboardstats() {
   // const [role, setRole] = useState("admin");
@@ -20,9 +21,11 @@ function Dashboardstats() {
     case "ADMIN":
       return <Admin />;
     case "AFFILIATE_PARTNER":
-      return <div>affiliate</div>;
+      return (
+        <FeatureUnavailable showBackButton title="Affiliate Partner page" />
+      );
     case "TRAINER":
-      return <div>trainer</div>;
+      return <FeatureUnavailable title=" Trianer dashboard" showBackButton />;
     case "REGULAR":
       // return <Regular />;
       return <UserDashboard />;
@@ -31,7 +34,7 @@ function Dashboardstats() {
     case "PREMIUM":
       return <PremiumUser />;
     case "CORPORATE_ADMIN":
-      return <div>CORPORATE ADMIN</div>;
+      return <FeatureUnavailable title="CORPORATE ADMIN" />;
 
     default:
       return UnauthorizedPage();
