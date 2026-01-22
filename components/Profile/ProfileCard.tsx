@@ -2,6 +2,7 @@
 import { useProfile } from "@/hooks/useProfile";
 import AvatarUpload from "./AvatarUpload";
 import ProfileForm from "./ProfileForm";
+import SectionLoader from "../Loaders/sectionLoader";
 
 export default function ProfileCard() {
   const { data, isLoading } = useProfile();
@@ -9,7 +10,7 @@ export default function ProfileCard() {
   if (isLoading) {
     return (
       <div className="rounded-xl bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500">Loading profile...</p>
+        <SectionLoader height="200px" />
       </div>
     );
   }
