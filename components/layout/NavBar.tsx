@@ -4,11 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import navlogo from "@/public/asset/logo.png";
 import Eugymlogo from "@/public/asset/eugym_logo.png";
 import Image from "next/image";
 import CreateAccountModal from "../modals/createAccountModal";
-import clsx from "clsx";
 
 export interface NavLink {
   name: string;
@@ -25,11 +23,13 @@ interface NavbarProps {
 export default function Navbar({
   logo = (
     <div className="flex items-center space-x-2">
-      <Image
-        src={Eugymlogo}
-        alt="logo"
-        className="md:w-16 md:h-16 h-12 w-12 p-1"
-      />
+      <a href="#">
+        <Image
+          src={Eugymlogo}
+          alt="logo"
+          className="md:w-16 md:h-16 h-12 w-12 p-1"
+        />
+      </a>
     </div>
   ),
   navLinks,

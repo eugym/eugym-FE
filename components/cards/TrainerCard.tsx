@@ -7,12 +7,12 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface TrainerCardProps {
   name: string;
-  specialty: string;
-  clients: number;
-  experience: number;
-  location: string;
-  price: string;
-  rating: number;
+  specialty?: string;
+  clients?: number;
+  experience?: number;
+  location?: string;
+  price?: string;
+  rating?: number;
   image: string | StaticImport;
 }
 
@@ -52,16 +52,17 @@ const TrainerCard: React.FC<TrainerCardProps> = ({
 
         <div className="flex items-center text-gray-500 text-sm mb-2 gap-2">
           <Users className="w-4 h-4" />
-          {clients} clients • {experience} years experience
+          {clients} clients
+          {/* • {experience} years experience */}
         </div>
 
         <div className="flex items-center text-gray-500 text-sm mb-4 gap-2">
-          <MapPin className="w-4 h-4" />
+          {/* <MapPin className="w-4 h-4" /> */}
           {location}
         </div>
 
         <p className="font-semibold text-gray-900">{price}</p>
-        <p className="text-sm text-gray-500">Per Session</p>
+        {/* <p className="text-sm text-gray-500">Per Session</p> */}
       </div>
     </motion.div>
   );
