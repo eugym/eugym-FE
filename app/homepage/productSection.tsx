@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import ProductCard from "@/components/cards/ProductCard";
 import product1 from "@/public/images/product1.jpg";
 import product2 from "@/public/images/product2.jpg";
+import product3 from "@/public/images/Sport Bra.jpg";
 import toast from "react-hot-toast";
 
 const products = [
   {
     name: "Sport Bra",
     price: "₦18,000",
-    image: product1,
+    image: product3,
   },
   {
     name: "Performance Suit",
@@ -54,7 +55,7 @@ export default function ProductSection() {
         </div>
 
         <motion.button
-          onClick={() => toast.error("Not available at this time")}
+          onClick={() => toast.error("Store not available at this time")}
           whileHover={{ scale: 1.05 }}
           className="bg-primary text-white font-medium px-6 py-3 rounded-md hover:bg-green-600 transition"
         >

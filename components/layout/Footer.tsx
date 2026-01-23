@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Youtube, X } from "lucide-react";
+import { Mail, Phone, MapPin, Youtube, X, Facebook } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -110,7 +110,7 @@ export default function Footer() {
 
         <div className="flex space-x-5 text-gray-400">
           <Link href="#" aria-label="LinkedIn" className="hover:text-green-400">
-            <Linkedin size={18} />
+            <Facebook size={18} />
           </Link>
           <Link href="#" aria-label="YouTube" className="hover:text-green-400">
             <Youtube size={18} />

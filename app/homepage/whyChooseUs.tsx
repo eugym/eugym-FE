@@ -23,7 +23,7 @@ const featuresTop = [
     icon: imageIcon3,
     title: "Our Affiliates",
     description:
-      "Exclusive access to luxury hotel fitness centers - Sheraton, Transcorp, Eko Hotels.",
+      "Exclusive access to luxury hotel and fitness centers nation wide.",
   },
 ];
 
@@ -47,7 +47,7 @@ const featuresBottom = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="py-20 bg-white text-center " id="services">
+    <section className="py-20 bg-white text-center " id="about">
       <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
         <motion.h2
