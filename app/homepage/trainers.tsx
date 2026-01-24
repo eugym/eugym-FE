@@ -4,37 +4,36 @@ import { motion } from "framer-motion";
 import Trainer1 from "@/public/images/trainer1.png";
 import Trainer2 from "@/public/images/trainer2.png";
 import Trainer3 from "@/public/images/trainer3.png";
-
 import TrainerCard from "@/components/cards/TrainerCard";
 
 const trainers = [
   {
     name: "David Chen",
     specialty: "HIIT & Functional Training",
-    clients: 95,
     experience: 7,
-    location: "Ikoyi, Lagos",
-    price: "₦18,000/session",
+    // clients: 95,
+    // location: "Ikoyi, Lagos",
+    // price: "₦18,000/session",
     rating: 4.8,
     image: Trainer1,
   },
   {
     name: "Michael Adams",
     specialty: "Strength & Conditioning",
-    clients: 120,
     experience: 10,
-    location: "Lekki, Lagos",
-    price: "₦20,000/session",
+    // clients: 120,
+    // location: "Lekki, Lagos",
+    // price: "₦20,000/session",
     rating: 5.0,
     image: Trainer2,
   },
   {
     name: "Samuel Johnson",
     specialty: "CrossFit & Mobility",
-    clients: 80,
     experience: 6,
-    location: "Victoria Island, Lagos",
-    price: "₦17,000/session",
+    // clients: 80,
+    // location: "Victoria Island, Lagos",
+    // price: "₦17,000/session",
     rating: 4.9,
     image: Trainer3,
   },
@@ -51,7 +50,7 @@ export default function TrainersSection() {
           viewport={{ once: true }}
           className="text-3xl md:text-5xl font-bold text-gray-900 mb-4"
         >
-          Meet Our Expert Trainers
+          Meet Our Expert <span className="text-accent"> Trainers</span>
         </motion.h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-12">
           Work with certified professionals who will help you achieve your
