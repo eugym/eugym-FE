@@ -32,7 +32,8 @@ function Dashboardstats() {
     case "STANDARD":
       return <StandardDashboard />;
     case "PREMIUM":
-      return <PremiumUser />;
+      // return <PremiumUser />;
+      return <UserDashboard />;
     case "CORPORATE_ADMIN":
       return <FeatureUnavailable title="CORPORATE ADMIN" />;
 
