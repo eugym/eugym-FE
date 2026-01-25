@@ -1,15 +1,17 @@
 "use client";
 
 import { ReactNode } from "react";
-// import { UserRole } from "@/types/roles";
 // import { useAuth } from "@/context/AuthContext";
 import clsx from "clsx";
 import { Lock } from "lucide-react";
+import { getUserRole } from "@/app/api/lib/role";
 
-type UserRole = "admin" | "trainer" | "member";
+export type MyUserRole = "REGULAR" | "STANDARD" | "PREMIUM";
+
+const role = getUserRole();
 
 interface DisabledRoleGateProps {
-  allow: UserRole[];
+  allow: MyUserRole[];
   message?: string;
   label?: string;
   children: ReactNode;
@@ -22,11 +24,10 @@ export default function DisabledRoleGate({
   children,
 }: DisabledRoleGateProps) {
   //   const { user } = useAuth();
+  // const isAllowed = user && allow.includes(role);
 
-  //   const isAllowed = user && allow.includes(user.role);
-
-  const isAllowed = "";
-
+  const isAllowed = allow.includes("PREMIUM");
+  // const isAllowed = "";
   return (
     <div className="relative">
       {/* Content */}
@@ -41,7 +42,7 @@ export default function DisabledRoleGate({
             <div className="absolute right-2 top-2 flex p-3 items-center justify-center gap-2 rounded-full bg-white shadow">
               {/* <div className="flex flex-row"> */}
               <span className="text-sm text-red-500"> {label}</span>
-              <Lock size={16} className="text-gray-600 text-red-500" />
+              <Lock size={16} className=" text-red-500" />
               {/* </div> */}
             </div>
           </div>

@@ -6,71 +6,14 @@ import insightIcon from "@/public/asset/insight.png";
 import aiTrainer from "@/public/asset/aiTrainer.png";
 
 // ------------------------- Types -------------------------
-interface EventItem {
-  id: string;
-  date: string;
-  title: string;
-  location: string;
-  spots: number;
-  tag?: "Free" | "Paid";
-}
 
-interface FeatureItem {
-  id: string;
-  text: string;
-}
-
-// ------------------------- Data -------------------------
-const events: EventItem[] = [
-  {
-    id: "e1",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e2",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e3",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e4",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e5",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-];
-
-const premiumFeatures: FeatureItem[] = [
-  { id: "f1", text: "Access to all gym locations nationwide" },
-  { id: "f2", text: "Access to premium hotel gym partners" },
-  { id: "f3", text: "Personal trainer assignments" },
-  { id: "f4", text: "Custom diet and workout plans" },
-  { id: "f5", text: "Priority booking for classes" },
-];
+// const premiumFeatures: FeatureItem[] = [
+//   { id: "f1", text: "Access to all gym locations nationwide" },
+//   { id: "f2", text: "Access to premium hotel gym partners" },
+//   { id: "f3", text: "Personal trainer assignments" },
+//   { id: "f4", text: "Custom diet and workout plans" },
+//   { id: "f5", text: "Priority booking for classes" },
+// ];
 
 // ------------------------- Components -------------------------
 function Badge({ children }: { children: React.ReactNode }) {
@@ -141,42 +84,17 @@ function PremiumSection() {
             </h4>
           </div>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
-            {premiumFeatures.map((f) => (
+            {/* {premiumFeatures.map((f) => (
               <div key={f.id} className="flex items-start gap-2">
                 <CheckCircle className="text-emerald-400 " size={20} />
                 <div>{f.text}</div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
         <div className="flex items-center lg:justify-end">
           <button className="bg-emerald-600 text-white px-5 py-2 rounded-md font-semibold hover:brightness-95">
             Upgrade to Premium
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EventCard({ item }: { item: EventItem }) {
-  return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="text-xs text-sky-500 font-medium">{item.date}</div>
-          <h5 className="text-gray-900 font-semibold mt-2">{item.title}</h5>
-          <div className="flex items-center text-sm text-gray-500 mt-2">
-            <MapPin size={14} className="mr-1 text-rose-500" />
-            <span>{item.location}</span>
-          </div>
-          <div className="text-sm text-emerald-600 mt-2">
-            {item.spots} spots available
-          </div>
-        </div>
-        <div className="self-end">
-          <button className="border border-emerald-400 text-emerald-600 px-4 py-2 rounded-md text-sm font-semibold hover:bg-emerald-50">
-            Register For Free
           </button>
         </div>
       </div>
@@ -212,9 +130,9 @@ export default function StandardDashboard() {
 
         {/* Event grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((ev) => (
+          {/* {events.map((ev) => (
             <EventCard key={ev.id} item={ev} />
-          ))}
+          ))} */}
         </div>
       </div>
     </div>
