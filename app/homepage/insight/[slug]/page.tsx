@@ -27,7 +27,7 @@ export default async function InsightPage({ params }: Props) {
           {article?.date} • {article?.readTime}
         </p>
 
-        <div className="relative h-82 mb-6 rounded-lg overflow-hidden">
+        <div className="relative h-92 mb-6 rounded-lg overflow-hidden">
           <Image
             src={article?.image}
             alt={article?.title}
@@ -36,7 +36,7 @@ export default async function InsightPage({ params }: Props) {
           />
         </div>
 
-        <p className="text-gray-700 leading-relaxed">{article?.excerpt}</p>
+        <div className="text-gray-700 leading-relaxed">{article?.excerpt}</div>
       </article>
 
       <Link
