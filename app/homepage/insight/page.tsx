@@ -5,6 +5,7 @@ import { articles } from "./data";
 const Insight = () => {
   const links = [
     { name: "Home", href: "/" },
+    { name: "About Us", href: "/" },
     { name: "Services", href: "/" },
     { name: "Trainers", href: "/" },
     { name: "Store", href: "/" },
