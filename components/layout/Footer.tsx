@@ -105,7 +105,7 @@ export default function Footer() {
       {/* Bottom section */}
       <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <p className="text-xs text-gray-500">
-          © {year} Impactify. All rights reserved.
+          © {year} Eugym Fitness. All rights reserved.
         </p>
 
         <div className="flex space-x-5 text-gray-400">
