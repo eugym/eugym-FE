@@ -5,6 +5,7 @@ import ProductCard from "@/components/cards/ProductCard";
 import product1 from "@/public/images/product1.jpg";
 import product2 from "@/public/images/product2.jpg";
 import product3 from "@/public/images/Sport Bra.jpg";
+import product4 from "@/public/images/Joggers.png";
 import toast from "react-hot-toast";
 
 const products = [
@@ -26,7 +27,7 @@ const products = [
   {
     name: "Joggers",
     price: "₦18,000",
-    image: product2,
+    image: product4,
   },
 ];
 
