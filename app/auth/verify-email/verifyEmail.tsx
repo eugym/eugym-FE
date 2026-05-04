@@ -39,7 +39,7 @@ export default function VerifyEmailPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ token }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -53,7 +53,7 @@ export default function VerifyEmailPage() {
       toast.success("Your email has been verified successfully 🎉");
       // Optional redirect after success
       setTimeout(() => {
-        router.push("auth/login");
+        router.push("/auth/login");
       }, 2000);
     } catch (err: any) {
       setError(err.message);
