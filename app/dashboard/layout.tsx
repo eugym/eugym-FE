@@ -5,18 +5,34 @@ import type { User } from "@/app/store/auth";
 
 async function getSessionUser(
   token: string
-): Promise<{ user: User | null; error?: string }> {
+): Promise<{ user: User | null }> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
-    if (!res.ok) return { user: null, error: `backend returned ${res.status}` };
+
+    if (!res.ok) {
+      console.error("[DashboardLayout] /auth/me returned", res.status);
+      return { user: null };
+    }
+
     const data = await res.json();
-    const user = data?.data?.user ?? data?.user ?? null;
+
+    // Handle common backend response shapes
+    const user: User | null =
+      data?.data?.user ??   // { data: { user: {...} } }
+      data?.user ??          // { user: {...} }
+      (data?.id ? data : null); // flat user object
+
+    if (!user) {
+      console.error("[DashboardLayout] Could not extract user from /auth/me response:", JSON.stringify(data));
+    }
+
     return { user };
   } catch (err) {
-    return { user: null, error: String(err) };
+    console.error("[DashboardLayout] /auth/me fetch failed:", err);
+    return { user: null };
   }
 }
 

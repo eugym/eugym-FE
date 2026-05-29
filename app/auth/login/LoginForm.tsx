@@ -33,7 +33,9 @@ export default function LoginForm() {
     try {
       await login(form);
       toast.success("Login successful");
-      router.push("/dashboard/stats");
+      // Hard navigation ensures the browser sends the new auth_session cookie in a
+      // fresh HTTP request, so the dashboard Server Component sees it on first load.
+      window.location.href = "/dashboard/stats";
     } catch (err: any) {
       const msg =
         err?.error?.message ??
