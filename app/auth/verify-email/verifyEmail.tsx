@@ -30,9 +30,7 @@ export default function VerifyEmailPage() {
 
   const verifyEmail = async (token: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}auth/verify-email`,
-
+      const res = await fetch("/api/auth/verify-email",
         {
           method: "POST",
           headers: {
