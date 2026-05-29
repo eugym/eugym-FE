@@ -1,121 +1,213 @@
-import { ITableBody, ITableHead, Table } from "@/components/table";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import {
+  Users, UserCheck, Repeat, CreditCard,
+  Building2, TrendingUp, Activity,
+} from "lucide-react";
 import StatCard from "../components/cards/statsCard";
 import RevenueBarChart from "../components/charts/RevenueBarChart";
-import UsersPieChart from "../components/charts/UsersPieChart";
-import { Users, UserCheck, Repeat, CreditCard, DollarSign } from "lucide-react";
+import UsersPieChart, { PieSlice } from "../components/charts/UsersPieChart";
+import { Table, ITableHead, ITableBody } from "@/components/table";
+import { useDashboardUser } from "../components/DashboardContext";
 
+// ---------- types ----------
+interface AdminStats {
+  totalUsers: number;
+  totalTrainers: number;
+  totalAffiliates: number;
+  totalAdmins: number;
+  totalRegular: number;
+  totalStandard: number;
+  totalPremium: number;
+  totalCorporate: number;
+  activeUsers: number;
+  inactiveUsers: number;
+}
+
+// ---------- data fetching ----------
+async function fetchStats(): Promise<AdminStats> {
+  const res = await fetch("/api/users/stats", { cache: "no-store" });
+  if (!res.ok) throw new Error(`Stats fetch failed (${res.status})`);
+  const json = await res.json();
+  return json.data;
+}
+
+// ---------- helpers ----------
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+const todayLong = new Date().toLocaleDateString("en-NG", {
+  weekday: "long", year: "numeric", month: "long", day: "numeric",
+});
+
+const CORP_HEADERS: ITableHead[] = [
+  { name: "companyName", label: "Company" },
+  { name: "email",       label: "Email" },
+  { name: "phone",       label: "Phone" },
+  { name: "status",      label: "Status" },
+];
+
+const CORP_BODY: ITableBody[] = [
+  { id: "1", companyName: "Access Bank",   email: "hr@access.com",   phone: "08012345678", status: "active" },
+  { id: "2", companyName: "MTN Nigeria",   email: "hr@mtn.com",      phone: "08012345679", status: "active" },
+  { id: "3", companyName: "Dangote Group", email: "hr@dangote.com",  phone: "08012345680", status: "inactive" },
+];
+
+// ---------- component ----------
 export default function Admin() {
-  const headers: ITableHead[] = [
-    { name: "companyName", label: "Company Name" },
-    { name: "email", label: "Email Address" },
-    { name: "phoneNumber", label: "Phone Number" },
-  ];
+  const user = useDashboardUser();
 
-  const body: ITableBody[] = [
-    {
-      id: "1",
-      companyName: "Eugym Fitness",
-      email: "john@example.com",
-      phoneNumber: "Admin",
-    },
+  const { data: stats, isLoading } = useQuery<AdminStats>({
+    queryKey: ["admin-stats"],
+    queryFn: fetchStats,
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 min
+  });
 
-    {
-      id: "2",
-      companyName: "Eugym Fitness",
-      email: "john@example.com",
-      phoneNumber: "Admin",
-    },
-
-    {
-      id: "3",
-      companyName: "Eugym Fitness",
-      email: "john@example.com",
-      phoneNumber: "Admin",
-    },
-
-    {
-      id: "4",
-      companyName: "Eugym Fitness",
-      email: "john@example.com",
-      phoneNumber: "Admin",
-    },
-  ];
+  // Build pie-chart slices from real data
+  const pieSlices: PieSlice[] = stats
+    ? [
+        { label: "Regular",    value: stats.totalRegular,   color: "#93C5FD" },
+        { label: "Standard",   value: stats.totalStandard,  color: "#19b24b" },
+        { label: "Premium",    value: stats.totalPremium,   color: "#F59E0B" },
+        { label: "Corporate",  value: stats.totalCorporate, color: "#8B5CF6" },
+        { label: "Trainers",   value: stats.totalTrainers,  color: "#06B6D4" },
+        { label: "Affiliates", value: stats.totalAffiliates,color: "#FB923C" },
+      ].filter((s) => s.value > 0)
+    : [];
 
   return (
-    <>
-      <div className="space-y-6 p-6">
-        {/* Stats Grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <StatCard
-            title="Today's signIn"
-            value="20"
-            icon={<Users className="h-5 w-5 text-green-600" />}
-            iconBg="bg-green-100"
-          />
-          <StatCard
-            title="Total Gym Users"
-            value={33}
-            icon={<Users className="h-5 w-5 text-blue-600" />}
-          />
-          <StatCard
-            title="Total Trainers"
-            value={20}
-            icon={<UserCheck className="h-5 w-5 text-gray-700" />}
-            iconBg="bg-gray-200"
-          />
-          <StatCard
-            title="Affiliate Check-ins"
-            value={20}
-            icon={<Repeat className="h-5 w-5 text-green-600" />}
-            iconBg="bg-green-100"
-          />
-          <StatCard
-            title="New Sign-in"
-            value={33}
-            icon={<Repeat className="h-5 w-5 text-indigo-600" />}
-            iconBg="bg-indigo-100"
-          />
-          <StatCard
-            title="Active Paid Subscribers"
-            value={20}
-            icon={<CreditCard className="h-5 w-5 text-gray-600" />}
-            iconBg="bg-gray-200"
-          />
+    <div className="space-y-6 p-5">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-800">
+            {getGreeting()}, {user.firstName} 👋
+          </h1>
+          <p className="text-sm text-gray-400 mt-0.5">{todayLong}</p>
         </div>
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
+          <Activity size={12} className="shrink-0" />
+          Live Dashboard
+        </span>
+      </div>
 
-        {/* Charts */}
-        <div className="grid gap-6 lg:grid-cols-3 ">
-          <div className="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Monthly Revenue Trend</h2>
+      {/* ── Stats grid ── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <StatCard
+          title="Total Users"
+          value={stats?.totalUsers ?? "—"}
+          icon={<Users className="h-5 w-5 text-blue-600" />}
+          iconBg="bg-blue-100"
+          loading={isLoading}
+          description="All registered accounts"
+        />
+        <StatCard
+          title="Active Subscribers"
+          value={stats?.activeUsers ?? "—"}
+          icon={<CreditCard className="h-5 w-5 text-emerald-600" />}
+          iconBg="bg-emerald-100"
+          loading={isLoading}
+          description="Currently active users"
+        />
+        <StatCard
+          title="Total Trainers"
+          value={stats?.totalTrainers ?? "—"}
+          icon={<UserCheck className="h-5 w-5 text-indigo-600" />}
+          iconBg="bg-indigo-100"
+          loading={isLoading}
+          description="Registered personal trainers"
+        />
+        <StatCard
+          title="Affiliate Partners"
+          value={stats?.totalAffiliates ?? "—"}
+          icon={<Repeat className="h-5 w-5 text-amber-600" />}
+          iconBg="bg-amber-100"
+          loading={isLoading}
+          description="Active gym affiliates"
+        />
+        <StatCard
+          title="Premium Users"
+          value={stats?.totalPremium ?? "—"}
+          icon={<TrendingUp className="h-5 w-5 text-purple-600" />}
+          iconBg="bg-purple-100"
+          loading={isLoading}
+        />
+        <StatCard
+          title="Standard Users"
+          value={stats?.totalStandard ?? "—"}
+          icon={<Users className="h-5 w-5 text-sky-600" />}
+          iconBg="bg-sky-100"
+          loading={isLoading}
+        />
+        <StatCard
+          title="Corporate Clients"
+          value={stats?.totalCorporate ?? "—"}
+          icon={<Building2 className="h-5 w-5 text-rose-600" />}
+          iconBg="bg-rose-100"
+          loading={isLoading}
+          description="Corporate membership accounts"
+        />
+        <StatCard
+          title="Inactive Users"
+          value={stats?.inactiveUsers ?? "—"}
+          icon={<Users className="h-5 w-5 text-gray-500" />}
+          iconBg="bg-gray-100"
+          loading={isLoading}
+        />
+      </div>
 
-              <div className="flex gap-2">
-                <select className="rounded-md border px-2 py-1 text-sm w-[70px]">
-                  <option>All</option>
-                </select>
-                <select className="rounded-md border px-2 py-1 text-sm">
-                  <option>2024</option>
-                </select>
-              </div>
+      {/* ── Charts row ── */}
+      <div className="grid gap-5 lg:grid-cols-3">
+        {/* Revenue bar chart — 2/3 width */}
+        <div className="lg:col-span-2 rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-semibold text-gray-800">Monthly Revenue</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Breakdown by membership tier (₦ thousands)</p>
             </div>
-
-            <RevenueBarChart />
+            <div className="flex gap-2">
+              <select className="rounded-lg border border-gray-200 px-2 py-1.5 text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                <option>All tiers</option>
+                <option>Standard</option>
+                <option>Premium</option>
+                <option>Corporate</option>
+              </select>
+              <select className="rounded-lg border border-gray-200 px-2 py-1.5 text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                <option>2025</option>
+                <option>2024</option>
+              </select>
+            </div>
           </div>
-
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-4 font-semibold">Users Distribution</h2>
-            <UsersPieChart />
-          </div>
+          <RevenueBarChart loading={false} />
         </div>
-        <div className="">
-          <Table
-            headers={headers}
-            body={body || []}
-            title="Coorperate Clients "
-            showSerialNumber
-          />
+
+        {/* Pie chart — 1/3 width */}
+        <div className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
+          <div className="mb-4">
+            <h2 className="font-semibold text-gray-800">User Distribution</h2>
+            <p className="text-xs text-gray-400 mt-0.5">By membership tier</p>
+          </div>
+          <UsersPieChart data={pieSlices} loading={isLoading} />
         </div>
       </div>
-    </>
+
+      {/* ── Corporate clients table ── */}
+      <div>
+        <Table
+          title="Corporate Clients"
+          subTitle="Company membership accounts"
+          headers={CORP_HEADERS}
+          body={CORP_BODY}
+          showSerialNumber
+          allowSearchBar
+        />
+      </div>
+    </div>
   );
 }
