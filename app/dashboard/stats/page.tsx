@@ -1,42 +1,31 @@
 "use client";
-// import Regular from "../user/regular/page";
 import StandardDashboard from "../user/standard/page";
 import PremiumUser from "../user/premium/page";
-import { getUserRole } from "@/app/api/lib/role";
 import UnauthorizedPage from "@/components/UnauthorizedPage";
 import Admin from "../admin/page";
 import UserDashboard from "../user/page";
 import FeatureUnavailable from "@/components/FeatureUnavailable/FeatureUnavailable";
+import { useAuthStore } from "@/app/store/auth";
 
 function Dashboardstats() {
-  // const [role, setRole] = useState("admin");
-  // const [role, setRole] = useState("trainer");
-  // const [role, setRole] = useState("affiliate");
-  // const [role, setRole] = useState("standard");
-  // const [role, setRole] = useState("premium");
-  // const [role, setRole] = useState("regular");
+  const user = useAuthStore((s) => s.user);
+  const role = user?.role;
 
-  const role = getUserRole();
   switch (role as string) {
     case "ADMIN":
       return <Admin />;
     case "AFFILIATE_PARTNER":
-      return (
-        <FeatureUnavailable showBackButton title="Affiliate Partner page" />
-      );
+      return <FeatureUnavailable showBackButton title="Affiliate Partner page" />;
     case "TRAINER":
-      return <FeatureUnavailable title=" Trianer dashboard" showBackButton />;
+      return <FeatureUnavailable title="Trainer dashboard" showBackButton />;
     case "REGULAR":
-      // return <Regular />;
       return <UserDashboard />;
     case "STANDARD":
       return <StandardDashboard />;
     case "PREMIUM":
-      // return <PremiumUser />;
       return <UserDashboard />;
     case "CORPORATE_ADMIN":
       return <FeatureUnavailable title="CORPORATE ADMIN" />;
-
     default:
       return UnauthorizedPage();
   }
