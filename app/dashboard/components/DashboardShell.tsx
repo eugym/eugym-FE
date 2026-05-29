@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { setSessionToken } from "@/app/api/lib/session";
 import { useAuthStore } from "@/app/store/auth";
 import { DashboardProvider } from "./DashboardContext";
@@ -22,10 +22,10 @@ export default function DashboardShell({
   const [isOpen, setIsOpen] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
 
-  // Sync server-provided user + token to client-side stores once on mount.
-  // This makes Zustand and the Axios session token correct for all subsequent
-  // client-side API calls without any additional network request.
-  useEffect(() => {
+  // useLayoutEffect runs synchronously after DOM mutations but BEFORE any
+  // useEffect in child components (including TanStack Query's initial fetch).
+  // This guarantees the session token is set before the first API call fires.
+  useLayoutEffect(() => {
     setUser(user);
     setSessionToken(token);
   }, [user.id, token, setUser]);
