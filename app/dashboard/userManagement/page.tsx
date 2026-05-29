@@ -9,8 +9,6 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/modals/modal";
 import RegisterUser from "./RegisterUser";
 import InviteAdminUser from "./inviteAdminUser";
-import { getSessionToken } from "@/app/api/lib/session";
-
 // ---------- types ----------
 interface RawUser {
   id: string;
@@ -29,27 +27,18 @@ interface RawUser {
 }
 
 // ---------- fetch ----------
+// Calls the Next.js proxy at /api/users/all (same-origin → no CORS).
+// The proxy reads the auth_session cookie server-side and forwards to the backend.
 async function fetchAllUsers(): Promise<RawUser[]> {
-  const token = getSessionToken();
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/all`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-      cache: "no-store",
-    }
-  );
+  const res = await fetch("/api/users/all", { cache: "no-store" });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.message ?? `Failed to load users (${res.status})`);
+    throw new Error(err?.message ?? err?.error ?? `Failed to load users (${res.status})`);
   }
 
   const data = await res.json();
 
-  // Normalise across common response shapes
   return (
     data?.data?.allUser?.users ??
     data?.data?.users ??

@@ -1,16 +1,12 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { getSessionToken } from "./session";
-
-// interface GetRequestConfig {
-//   url: string;
-//   auth?: boolean;
-// }
+import { apiUrl } from "./url";
 
 export async function getRequest({ queryKey }: QueryFunctionContext) {
   const [, url, auth] = queryKey;
   const token = auth ? getSessionToken() : null;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+  const res = await fetch(apiUrl(String(url)), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -19,10 +15,9 @@ export async function getRequest({ queryKey }: QueryFunctionContext) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body?.message ?? `Request failed (${res.status})`);
   }
 
-  const data = await res.json();
-
-  return data;
+  return res.json();
 }
