@@ -1,32 +1,41 @@
 "use client";
 
 import { useDashboardUser } from "../components/DashboardContext";
-import Admin from "../admin/page";
-import UserDashboard from "../user/page";
+import Admin            from "../admin/page";
+import RegularDashboard from "../user/regular/page";
 import StandardDashboard from "../user/standard/page";
+import PremiumDashboard  from "../user/premium/page";
+import TrainerDashboard  from "../user/trainers/page";
+import AffiliateDashboard from "../affiliate/page";
 import FeatureUnavailable from "@/components/FeatureUnavailable/FeatureUnavailable";
-import UnauthorizedPage from "@/components/UnauthorizedPage";
 
 export default function DashboardStats() {
   const user = useDashboardUser();
 
   switch (user.role) {
-    case "ADMIN":
     case "SUPER_ADMIN":
+    case "ADMIN":
       return <Admin />;
-    case "AFFILIATE_PARTNER":
-      return <FeatureUnavailable showBackButton title="Affiliate Partner Dashboard" />;
-    case "TRAINER":
-      return <FeatureUnavailable title="Trainer Dashboard" showBackButton />;
+
     case "REGULAR":
-      return <UserDashboard />;
+      return <RegularDashboard />;
+
     case "STANDARD":
       return <StandardDashboard />;
+
     case "PREMIUM":
-      return <UserDashboard />;
+      return <PremiumDashboard />;
+
+    case "TRAINER":
+      return <TrainerDashboard />;
+
+    case "AFFILIATE_PARTNER":
+      return <AffiliateDashboard />;
+
     case "CORPORATE_ADMIN":
-      return <FeatureUnavailable title="Corporate Admin Dashboard" />;
+      return <FeatureUnavailable title="Corporate Admin Dashboard" showBackButton />;
+
     default:
-      return UnauthorizedPage();
+      return <FeatureUnavailable title="Dashboard unavailable" showBackButton />;
   }
 }
