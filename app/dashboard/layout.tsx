@@ -3,36 +3,13 @@ import { redirect } from "next/navigation";
 import DashboardShell from "./components/DashboardShell";
 import type { User } from "@/app/store/auth";
 
-async function getSessionUser(
-  token: string
-): Promise<{ user: User | null }> {
+function parseUserCookie(raw: string): User | null {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      console.error("[DashboardLayout] /auth/me returned", res.status);
-      return { user: null };
-    }
-
-    const data = await res.json();
-
-    // Handle common backend response shapes
-    const user: User | null =
-      data?.data?.user ??   // { data: { user: {...} } }
-      data?.user ??          // { user: {...} }
-      (data?.id ? data : null); // flat user object
-
-    if (!user) {
-      console.error("[DashboardLayout] Could not extract user from /auth/me response:", JSON.stringify(data));
-    }
-
-    return { user };
-  } catch (err) {
-    console.error("[DashboardLayout] /auth/me fetch failed:", err);
-    return { user: null };
+    const parsed = JSON.parse(raw);
+    if (!parsed?.id || !parsed?.role) return null;
+    return parsed as User;
+  } catch {
+    return null;
   }
 }
 
@@ -42,20 +19,25 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const session = cookieStore.get("auth_session");
 
-  if (!session?.value) {
+  const sessionCookie = cookieStore.get("auth_session");
+  const userCookie = cookieStore.get("user_info");
+
+  // No token → definitely not authenticated
+  if (!sessionCookie?.value) {
     redirect("/auth/login");
   }
 
-  const { user } = await getSessionUser(session.value);
+  // Parse user from the cookie set at login — no backend call needed
+  const user = userCookie?.value ? parseUserCookie(userCookie.value) : null;
 
   if (!user) {
+    // user_info cookie missing or corrupted — treat as expired session
     redirect("/auth/login");
   }
 
   return (
-    <DashboardShell user={user} token={session.value}>
+    <DashboardShell user={user} token={sessionCookie.value}>
       {children}
     </DashboardShell>
   );
