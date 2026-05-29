@@ -1,31 +1,32 @@
+"use client";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/app/api/lib/api";
-import { removeAccessToken, getAccessToken } from "@/app/api/lib/token";
-import toast from "react-hot-toast";
+import { clearSessionToken } from "@/app/api/lib/session";
+import { useAuthStore } from "@/app/store/auth";
 import { useRouter } from "next/navigation";
-// import { useAuthStore } from "@/app/store/auth";
+import toast from "react-hot-toast";
 
 export function useLogout() {
-  // const clearUser = useAuthStore((s) => s.clearUser);
+  const clearUser = useAuthStore((s) => s.clearUser);
   const queryClient = useQueryClient();
   const router = useRouter();
 
   return useMutation({
     mutationFn: async () => {
-      const token = getAccessToken();
-      return api.post("/auth/logout", { verificationToken: token });
+      await fetch("/api/auth/logout", { method: "POST" });
     },
     onSuccess: () => {
-      // setAccessToken(null);
-      removeAccessToken();
+      clearSessionToken();
+      clearUser();
       queryClient.clear();
       router.push("/auth/login");
-      toast.success("logout success");
+      toast.success("Logged out successfully");
     },
-
-    onError: (err) => {
-      console.error("Logout failed: ", err);
-      toast.error(err?.message || "failed");
+    onError: () => {
+      clearSessionToken();
+      clearUser();
+      queryClient.clear();
+      router.push("/auth/login");
     },
   });
 }

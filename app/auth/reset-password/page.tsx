@@ -11,12 +11,12 @@ import { motion } from "framer-motion";
 import Modal from "@/components/modals/modal";
 import OtpInput from "../components/otp-input";
 import { useState } from "react";
-import router from "next/router";
-import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useForgotPassword } from "@/hooks/useAuth";
 export default function ResetPassword() {
   // const [openModal, setOpenModal] = useState(true);
 
+  const router = useRouter();
   const { mutateAsync: Forgot, isPending: loading } = useForgotPassword();
 
   const [form, setForm] = useState({
@@ -34,12 +34,12 @@ export default function ResetPassword() {
       await Forgot(form);
       toast.success("Password reset link sent to your email");
       router.push("auth/login");
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(
-          err?.response?.data?.error?.message ?? "Unable to send reset link"
-        );
-      }
+    } catch (err: any) {
+      const msg =
+        err?.error?.message ??
+        err?.message ??
+        "Unable to send reset link";
+      toast.error(msg);
     }
   };
 
