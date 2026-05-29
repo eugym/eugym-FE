@@ -13,16 +13,8 @@ import {
 } from "lucide-react";
 import React from "react";
 
-export type Role =
-  | "SUPER_ADMIN"
-  | "ADMIN"
-  | "AFFILIATE_PARTNER"
-  | "CORPORATE_ADMIN"
-  | "TRAINER"
-  | "REGULAR"
-  | "STANDARD"
-  | "PREMIUM"
-  | "visitor";
+import type { Role } from "@/app/store/auth";
+export type { Role };
 
 export interface NavItem {
   id: string;
