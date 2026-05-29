@@ -5,7 +5,7 @@ import { useLogout } from "@/hooks/useLogout";
 import Profile from "@/components/Profile";
 // import { getUserRole } from "@/app/api/lib/role";
 // import { useAuth } from "@/hooks/useAuth";
-import { getStoredUser } from "@/app/store/auth";
+import { useAuthStore } from "@/app/store/auth";
 import TrainerImage from "@/public/images/trainer1.png";
 
 interface IProps {
@@ -13,7 +13,7 @@ interface IProps {
   setIsOpen: (value: boolean) => void;
 }
 export default function TopBar({ isOpen, setIsOpen }: IProps) {
-  const user = getStoredUser();
+  const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   function handleLogout() {
     logout.mutate();

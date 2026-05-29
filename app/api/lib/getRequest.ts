@@ -1,5 +1,5 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
-import { getAccessToken } from "./token";
+import { getSessionToken } from "./session";
 
 // interface GetRequestConfig {
 //   url: string;
@@ -8,7 +8,7 @@ import { getAccessToken } from "./token";
 
 export async function getRequest({ queryKey }: QueryFunctionContext) {
   const [, url, auth] = queryKey;
-  const token = auth ? getAccessToken() : null;
+  const token = auth ? getSessionToken() : null;
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method: "GET",

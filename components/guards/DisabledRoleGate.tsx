@@ -4,11 +4,9 @@ import { ReactNode } from "react";
 // import { useAuth } from "@/context/AuthContext";
 import clsx from "clsx";
 import { Lock } from "lucide-react";
-import { getUserRole } from "@/app/api/lib/role";
+import { useAuthStore } from "@/app/store/auth";
 
 export type MyUserRole = "REGULAR" | "STANDARD" | "PREMIUM";
-
-const role = getUserRole();
 
 interface DisabledRoleGateProps {
   allow: MyUserRole[];
@@ -24,6 +22,7 @@ export default function DisabledRoleGate({
   children,
 }: DisabledRoleGateProps) {
   //   const { user } = useAuth();
+  const role = useAuthStore((s) => s.user?.role);
   // const isAllowed = user && allow.includes(role);
 
   const isAllowed = allow.includes("PREMIUM");

@@ -11,11 +11,11 @@ import MealPlan from "./features/mealPlan";
 import TipCard from "./features/tips";
 import Banner from "@/components/banner";
 import { useState } from "react";
-import { getUserRole } from "@/app/api/lib/role";
+import { useAuthStore } from "@/app/store/auth";
 
 function UserDashboard() {
   const [showBanner, setShowBanner] = useState(true);
-  const role = getUserRole();
+  const role = useAuthStore((s) => s.user?.role);
   return (
     <>
       <div className="sticky top-1">
