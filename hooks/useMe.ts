@@ -1,37 +1,32 @@
 "use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import api from "@/app/api/lib/api";
-import { getAccessToken } from "@/app/api/lib/token";
+import { setSessionToken } from "@/app/api/lib/session";
 import { useAuthStore } from "@/app/store/auth";
+import type { User } from "@/app/store/auth";
 
 export function useMe() {
   const setUser = useAuthStore((s) => s.setUser);
 
   const query = useQuery({
     queryKey: ["me"],
-
     queryFn: async () => {
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error("No access token");
-      }
-
-      const res = await api.get("/auth/me");
-      return res.data;
+      const response = await fetch("/api/auth/me");
+      const data = await response.json();
+      if (!response.ok) throw data;
+      return data as { user: User; token: string };
     },
-
-    // enabled: typeof window !== "undefined" && !!getAccessToken(),
-    enabled: false,
+    enabled: true,
     retry: false,
-    staleTime: 1000 * 60 * 30, // ✅ 30 minutes
-    gcTime: 1000 * 60 * 60, // ✅ 1 hour
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
   });
 
-  // ✅ Sync server user → auth store
   useEffect(() => {
-    const user = query.data?.data?.user;
-    if (user) {
+    if (query.data) {
+      const { user, token } = query.data;
+      setSessionToken(token);
       setUser(user);
     }
   }, [query.data, setUser]);
