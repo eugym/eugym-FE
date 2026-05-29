@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type Role =
   | "SUPER_ADMIN"
@@ -25,8 +26,17 @@ interface AuthState {
   clearUser: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: "eugym-user",
+      // Only persist user metadata — the auth token stays in the httpOnly cookie
+      partialize: (state) => ({ user: state.user }),
+    }
+  )
+);

@@ -13,17 +13,19 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const role = useAuthStore((s) => s.user?.role) ?? "visitor";
+  const role = (useAuthStore((s) => s.user?.role) ?? "visitor") as Role;
 
   return (
-    <div className="flex h-screen w-full">
-      <SideNav isOpen={isOpen} setIsOpen={setIsOpen} role={role as Role} />
-      <div className="flex flex-col flex-1 h-full">
-        <TopNav isOpen={isOpen} setIsOpen={setIsOpen} />
-        <main className="flex-1 overflow-y-auto bg-gray-50">
-          <ProtectedRoute>{children}</ProtectedRoute>
-        </main>
+    <ProtectedRoute>
+      <div className="flex h-screen w-full">
+        <SideNav isOpen={isOpen} setIsOpen={setIsOpen} role={role} />
+        <div className="flex flex-col flex-1 h-full overflow-hidden">
+          <TopNav isOpen={isOpen} setIsOpen={setIsOpen} />
+          <main className="flex-1 overflow-y-auto bg-gray-50">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
