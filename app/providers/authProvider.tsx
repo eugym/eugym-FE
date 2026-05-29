@@ -1,11 +1,8 @@
 "use client";
 
-import { useMe } from "@/hooks/useMe";
-
+// AuthProvider is intentionally minimal.
+// The dashboard layout (Server Component) handles session validation server-side.
+// useMe is only called from hooks that need the in-memory Axios token on public pages.
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Fires useMe silently in background to restore session token + Zustand user
-  // from the httpOnly cookie. Does NOT block render — the middleware already
-  // handles server-side dashboard protection before the page is sent to the client.
-  useMe();
   return <>{children}</>;
 }
