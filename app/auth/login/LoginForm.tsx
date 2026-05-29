@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import { Suspense, useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
 
 export default function LoginForm() {
   const { mutateAsync: login, isPending: pending } = useLogin();
@@ -35,10 +34,13 @@ export default function LoginForm() {
       await login(form);
       toast.success("Login successful");
       router.push("/dashboard/stats");
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err?.response?.data?.error?.message ?? "Login failed");
-      }
+    } catch (err: any) {
+      const msg =
+        err?.error?.message ??
+        err?.data?.error?.message ??
+        err?.message ??
+        "Login failed";
+      toast.error(msg);
     }
   };
 
