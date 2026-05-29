@@ -38,7 +38,7 @@ export default function TopBar({ isOpen, setIsOpen }: IProps) {
 
         <div className="flex items-center gap-1 mr-2">
           <Profile
-            fullName={user?.fullName}
+            fullName={user ? `${user.firstName} ${user.lastName}` : undefined}
             role={user?.role as string}
             avatarUrl={TrainerImage}
             onLogout={handleLogout}
