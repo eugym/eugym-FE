@@ -1,7 +1,6 @@
 import axios from "axios";
-import { getAccessToken } from "./token";
-// import { isTokenExpired } from "@/app/utilities/isTokenExpired";
-import { clearAuth } from "./auth-storage";
+import { getSessionToken, clearSessionToken } from "./session";
+import { useAuthStore } from "@/app/store/auth";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -9,9 +8,8 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   config.headers = config.headers || {};
-
   if (!config.headers.Authorization) {
-    const token = getAccessToken();
+    const token = getSessionToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -19,22 +17,16 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/* Handle expired token globally */
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn("Token expired → Logging out");
-
-      clearAuth();
-
-      // Kill all cached queries
-      // queryClient.clear();   relaxed
-
-      // Hard redirect (safe even outside React)
-      window.location.href = "/auth/login";
+      clearSessionToken();
+      useAuthStore.getState().clearUser();
+      if (typeof window !== "undefined") {
+        window.location.href = "/auth/login";
+      }
     }
-
     return Promise.reject(error);
   }
 );
