@@ -1,126 +1,118 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useUpdateProfile } from "@/hooks/useProfile";
 import InputField from "../inputs/input";
 import Button from "../ui/Button";
+import SectionLoader from "../Loaders/sectionLoader";
 
-export default function ProfileForm({ profile }: { profile: any }) {
-  const [form, setForm] = useState(profile);
+interface ProfileFormProps {
+  profile: any;
+  isLoading: boolean;
+}
 
-  // console.log("profile info", form);
+export default function ProfileForm({ profile, isLoading }: ProfileFormProps) {
+  const [form, setForm] = useState({
+    firstName:   "",
+    lastName:    "",
+    email:       "",
+    phoneNumber: "",
+    bio:         "",
+  });
+
+  useEffect(() => {
+    if (profile) {
+      setForm({
+        firstName:   profile.firstName   ?? "",
+        lastName:    profile.lastName    ?? "",
+        email:       profile.email       ?? "",
+        phoneNumber: profile.phoneNumber ?? "",
+        bio:         profile.bio         ?? "",
+      });
+    }
+  }, [profile]);
 
   const { mutateAsync, isPending } = useUpdateProfile();
 
-  const handleChange = (name: string, value: string) => {
-    setForm((prev: any) => ({ ...prev, [name]: value }));
-  };
+  const set = (key: string) => (val: string) =>
+    setForm((prev) => ({ ...prev, [key]: val }));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await mutateAsync(form);
+    try {
+      await mutateAsync(form);
+      toast.success("Profile updated successfully");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message ?? "Failed to update profile");
+    }
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <SectionLoader height="260px" />
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <InputField
-          label="First Name"
-          placeholder=""
-          type="text"
-          value={form?.firstName}
-          onChange={(val) => handleChange("firstName", val)}
-        />
-
-        <InputField
-          label="Email Address"
-          placeholder="example@gmail.com"
-          type="email"
-          value={form?.lastName}
-          onChange={(val) => handleChange("lastName", val)}
-        />
-        {/* <Input
-          label="First Name"
-          name="firstName"
-          value={form?.firstName}
-          onChange={handleChange}
-        />
-        <Input
-          label="Last Name"
-          name="lastName"
-          value={form?.lastName}
-          onChange={handleChange}
-        /> */}
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <div className="mb-5">
+        <h2 className="text-base font-semibold text-gray-800">Personal Information</h2>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Update your name, contact details, and bio.
+        </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <InputField
-          label="Email Address"
-          placeholder="example@gmail.com"
-          type="email"
-          value={form?.email}
-          onChange={(val) => handleChange("email", val)}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField
+            label="First Name"
+            type="text"
+            value={form.firstName}
+            onChange={set("firstName")}
+          />
+          <InputField
+            label="Last Name"
+            type="text"
+            value={form.lastName}
+            onChange={set("lastName")}
+          />
+        </div>
 
-        <InputField
-          label="Phone number"
-          placeholder=""
-          type="text"
-          value={form?.phoneNumber}
-          onChange={(val) => handleChange("number", val)}
-        />
-        {/* <Input
-          label="Email"
-          name="email"
-          value={form?.email}
-          onChange={handleChange}
-        /> */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField
+            label="Email Address"
+            type="email"
+            value={form.email}
+            onChange={set("email")}
+          />
+          <InputField
+            label="Phone Number"
+            type="text"
+            value={form.phoneNumber}
+            onChange={set("phoneNumber")}
+          />
+        </div>
 
-        {/* <Input
-          label="Phone number"
-          name="number"
-          value={form?.phone_number}
-          onChange={handleChange}
-        /> */}
-      </div>
+        <div>
+          <label className="text-xs text-gray-600 uppercase tracking-wide">Bio</label>
+          <textarea
+            value={form.bio}
+            onChange={(e) => set("bio")(e.target.value)}
+            rows={4}
+            placeholder="Tell us a little about yourself…"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+          />
+        </div>
 
-      <Textarea
-        label="Bio"
-        name="bio"
-        value={form?.bio}
-        onChange={handleChange}
-      />
-
-      <div className="flex justify-end">
-        <Button
-          // disabled={isPending}
-          disabled
-          className="rounded-lg bg-gray-900 px-6 py-2 text-sm text-white disabled:opacity-50"
-        >
-          {isPending ? "Saving..." : "Save Changes"}
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-end pt-1">
+          <Button type="submit" loading={isPending}>
+            Save Changes
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }
-
-/* Reusable Inputs */
-const Input = ({ label, ...props }: any) => (
-  <div>
-    <label className="text-sm font-medium text-gray-700 ">{label}</label>
-    <input
-      {...props}
-      className="mt-1 w-full rounded-lg border px-3 py-2 text-sm "
-    />
-  </div>
-);
-
-const Textarea = ({ label, ...props }: any) => (
-  <div>
-    <label className="text-sm font-medium text-gray-700">{label}</label>
-    <textarea
-      {...props}
-      rows={4}
-      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-lite"
-    />
-  </div>
-);

@@ -1,14 +1,11 @@
 "use client";
 
 import { ReactNode } from "react";
-// import { useAuth } from "@/context/AuthContext";
 import clsx from "clsx";
 import { Lock } from "lucide-react";
-import { getUserRole } from "@/app/api/lib/role";
+import { useDashboardUser } from "@/app/dashboard/components/DashboardContext";
 
 export type MyUserRole = "REGULAR" | "STANDARD" | "PREMIUM";
-
-const role = getUserRole();
 
 interface DisabledRoleGateProps {
   allow: MyUserRole[];
@@ -19,34 +16,26 @@ interface DisabledRoleGateProps {
 
 export default function DisabledRoleGate({
   allow,
-  message = "This feature is not available for your role",
-  label = "Premium package",
+  message = "This feature is not available for your current plan",
+  label = "Upgrade required",
   children,
 }: DisabledRoleGateProps) {
-  //   const { user } = useAuth();
-  // const isAllowed = user && allow.includes(role);
+  const user = useDashboardUser();
+  const isAllowed = allow.includes(user.role as MyUserRole);
 
-  const isAllowed = allow.includes("PREMIUM");
-  // const isAllowed = "";
   return (
     <div className="relative">
-      {/* Content */}
-      <div className={clsx(!isAllowed && "pointer-events-none opacity-60")}>
+      <div className={clsx(!isAllowed && "pointer-events-none select-none opacity-50")}>
         {children}
       </div>
 
-      {/* Overlay */}
       {!isAllowed && (
-        <>
-          <div className="absolute inset-0 z-10 rounded-xl bg-white/10 backdrop-blur-[1px]">
-            <div className="absolute right-2 top-2 flex p-3 items-center justify-center gap-2 rounded-full bg-white shadow">
-              {/* <div className="flex flex-row"> */}
-              <span className="text-sm text-red-500"> {label}</span>
-              <Lock size={16} className=" text-red-500" />
-              {/* </div> */}
-            </div>
+        <div className="absolute inset-0 z-10 rounded-xl bg-white/40 backdrop-blur-[2px] flex items-center justify-center">
+          <div className="flex items-center gap-2 bg-white shadow-md rounded-xl px-4 py-2.5 border border-gray-100">
+            <Lock size={14} className="text-rose-500 shrink-0" />
+            <span className="text-sm font-medium text-gray-700">{label}</span>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

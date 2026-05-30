@@ -1,4 +1,4 @@
-import { getAccessToken } from "./token";
+import { getSessionToken } from "./session";
 
 export type HttpMethod = "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -15,7 +15,7 @@ export async function request<TResponse, TPayload = unknown>({
   payload,
   auth = true,
 }: RequestConfig<TPayload>): Promise<TResponse> {
-  const token = auth ? getAccessToken() : null;
+  const token = auth ? getSessionToken() : null;
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,

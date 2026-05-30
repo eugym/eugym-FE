@@ -1,55 +1,31 @@
 "use client";
 
-import api from "@/app/api/lib/api";
-import { setAccessToken } from "@/app/api/lib/token";
-import { saveAuth } from "@/app/store/auth";
 import { useMutation } from "@tanstack/react-query";
-import { setUserRole } from "@/app/api/lib/role";
+import { setSessionToken } from "@/app/api/lib/session";
+import { useAuthStore } from "@/app/store/auth";
+import type { User } from "@/app/store/auth";
 
-import axios from "axios";
 export function useLogin() {
+  const setUser = useAuthStore((s) => s.setUser);
+
   return useMutation({
     mutationFn: async (payload: {
       email: string;
       password: string;
       token?: string | null;
     }) => {
-      const response = await api.post(
-        payload.token ? `/auth/login?token=${payload.token}` : `/auth/login`,
-        payload
-      );
-      return response.data;
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) throw data;
+      return data as { user: User; token: string };
     },
-    onSuccess: (data) => {
-      const token = data?.data?.tokens?.accessToken;
-      const user = data?.data?.user;
-      const role = user?.role;
-
-      if (!token) {
-        console.error("No token returned from backend");
-        return;
-      }
-
-      saveAuth(token, user);
-      setAccessToken(token);
-      setUserRole(role);
-    },
-
-    onError: (error: unknown) => {
-      if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Login failed";
-
-        console.error("LOGIN ERROR:", {
-          status: error.response?.status,
-          message,
-          data: error.response?.data,
-        });
-      } else {
-        console.error("Unexpected error:", error);
-      }
+    onSuccess: ({ user, token }) => {
+      setSessionToken(token);
+      setUser(user);
     },
   });
 }

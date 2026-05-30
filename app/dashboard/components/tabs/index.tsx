@@ -15,7 +15,7 @@ interface TabsProps {
 export default function Tabs({ tabs, active, onChange }: TabsProps) {
   const handleKeyDown = (
     e: KeyboardEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     if (e.key === "ArrowRight") {
       const next = (index + 1) % tabs.length;
@@ -41,12 +41,12 @@ export default function Tabs({ tabs, active, onChange }: TabsProps) {
           disabled={tab.disabled}
           onClick={() => !tab.disabled && onChange(tab.id)}
           onKeyDown={(e) => handleKeyDown(e, index)}
-          className={`flex-1 text-center py-2 rounded-md text-sm font-medium transition
+          className={`flex-1 text-center py-2 rounded-md text-sm font-medium transition 
             ${tab.disabled ? "opacity-40 cursor-not-allowed" : ""}
             ${
               active === tab.id
-                ? "bg-green-600 text-white"
-                : "text-gray-600 hover:bg-gray-200"
+                ? "bg-green-600 text-white flex items-center gap-1.5 justify-around"
+                : "text-gray-600 hover:bg-gray-200 flex items-center gap-1.5 justify-around"
             }
           `}
         >

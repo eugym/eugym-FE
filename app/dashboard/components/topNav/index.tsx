@@ -3,47 +3,39 @@
 import { Bell, Menu, X } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import Profile from "@/components/Profile";
-// import { getUserRole } from "@/app/api/lib/role";
-// import { useAuth } from "@/hooks/useAuth";
-import { getStoredUser } from "@/app/store/auth";
 import TrainerImage from "@/public/images/trainer1.png";
+import type { User } from "@/app/store/auth";
 
-interface IProps {
+interface TopNavProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  user: User;
 }
-export default function TopBar({ isOpen, setIsOpen }: IProps) {
-  const user = getStoredUser();
+
+export default function TopNav({ isOpen, setIsOpen, user }: TopNavProps) {
   const logout = useLogout();
-  function handleLogout() {
-    logout.mutate();
-  }
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between shadow-md bg-white px-2">
-      <div>
-        <button
-          className="lg:hidden p-2 rounded-md"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between shadow-md bg-white px-4 shrink-0">
+      <button
+        className="lg:hidden p-2 rounded-md"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 ml-auto">
         <button className="relative">
           <Bell size={20} className="text-gray-600" />
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
         </button>
 
-        <div className="flex items-center gap-1 mr-2">
-          <Profile
-            fullName={user?.fullName}
-            role={user?.role as string}
-            avatarUrl={TrainerImage}
-            onLogout={handleLogout}
-          />
-        </div>
+        <Profile
+          fullName={`${user.firstName} ${user.lastName}`}
+          role={user.role}
+          avatarUrl={TrainerImage}
+          onLogout={() => logout.mutate()}
+        />
       </div>
     </header>
   );

@@ -1,222 +1,40 @@
-"use-client";
-import Image from "next/image";
-import { MapPin, CheckCircle, Sparkles, Cpu } from "lucide-react";
-import React from "react";
-import insightIcon from "@/public/asset/insight.png";
-import aiTrainer from "@/public/asset/aiTrainer.png";
+"use client";
 
-// ------------------------- Types -------------------------
-interface EventItem {
-  id: string;
-  date: string;
-  title: string;
-  location: string;
-  spots: number;
-  tag?: "Free" | "Paid";
-}
+import { Dumbbell, Calendar, MapPin } from "lucide-react";
+import { useDashboardUser } from "@/app/dashboard/components/DashboardContext";
+import DashboardHeader from "@/app/dashboard/components/shared/DashboardHeader";
+import StatChip from "@/app/dashboard/components/shared/StatChip";
+import TipCard from "@/app/dashboard/components/shared/TipCard";
+import AITrainerCard from "@/app/dashboard/components/shared/AITrainerCard";
+import EventsSection from "@/app/dashboard/components/shared/EventsSection";
+import UpgradeCTA from "@/app/dashboard/components/shared/UpgradeCTA";
 
-interface FeatureItem {
-  id: string;
-  text: string;
-}
+export default function RegularDashboard() {
+  const user = useDashboardUser();
 
-// ------------------------- Data -------------------------
-const events: EventItem[] = [
-  {
-    id: "e1",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e2",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e3",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e4",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-  {
-    id: "e5",
-    date: "SAT, MAR 30",
-    title: "Beach Yoga Session",
-    location: "Tarkwa Bay Beach, Lagos",
-    spots: 12,
-    tag: "Free",
-  },
-];
-
-const premiumFeatures: FeatureItem[] = [
-  { id: "f1", text: "Access to all gym locations nationwide" },
-  { id: "f2", text: "Access to premium hotel gym partners" },
-  { id: "f3", text: "Personal trainer assignments" },
-  { id: "f4", text: "Custom diet and workout plans" },
-  { id: "f5", text: "Priority booking for classes" },
-];
-
-// ------------------------- Components -------------------------
-function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-      {children}
-    </span>
-  );
-}
+    <div className="space-y-6 px-4 sm:px-5 py-5 max-w-7xl mx-auto">
+      <DashboardHeader user={user} />
 
-function TipCard() {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 ">
-      <div className="flex items-start gap-4">
-        <Image src={insightIcon} alt="insightIcom" className="w-8 h-8" />
-        <div className="flex-1">
-          <h4 className="font-semibold text-gray-900">Today's Fitness Tip</h4>
-          <p className="mt-2 text-sm text-gray-600">
-            “Start your day with 10 minutes of stretching. It improves
-            flexibility, reduces injury risk, and boosts energy levels
-            throughout the day.”
-          </p>
-          <div className="mt-3">
-            <a className="inline-flex items-center gap-2 text-sm text-emerald-700 font-medium border border-emerald-200 rounded-md px-3 py-2 hover:bg-emerald-50">
-              Get Stretching Guides{" "}
-            </a>
-          </div>
-        </div>
+      {/* Quick stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <StatChip icon={<Dumbbell size={16} />}  label="Sessions this month" value="4"          color="emerald" />
+        <StatChip icon={<Calendar size={16} />}  label="Events joined"       value="2"          color="sky" />
+        <StatChip icon={<MapPin size={16} />}    label="Nearest gym"         value="2.4 km"     color="indigo" />
+        <StatChip icon={<Dumbbell size={16} />}  label="Current plan"        value="Regular"    color="gray" />
       </div>
-    </div>
-  );
-}
 
-function AITrainerCard() {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-start gap-4">
-        <div className="p-3 rounded bg-sky-50">
-          <Image src={aiTrainer} alt="insightIcom" className="w-8 h-8" />
-        </div>
-        <div className="flex-1">
-          <h4 className="font-semibold text-gray-900">A.I Trainer</h4>
-          <p className="mt-2 text-sm text-gray-600">Recommended for today</p>
-          <p className="text-sm text-gray-500 mt-1">
-            20-minute full body HIIT workout
-          </p>
-          <div className="mt-3">
-            <Badge>Beginner</Badge>
-            <button className="ml-4 inline-flex items-center px-4 py-2 border border-emerald-400 text-emerald-700 rounded-md text-sm font-semibold hover:bg-emerald-50">
-              Start Workout
-            </button>
-          </div>
-        </div>
+      {/* Upgrade CTA — most prominent for Regular */}
+      <UpgradeCTA currentPlan="REGULAR" />
+
+      {/* Tip + AI Trainer */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <TipCard />
+        <AITrainerCard difficulty="Beginner" workout="20-min full body HIIT — no equipment needed" />
       </div>
-    </div>
-  );
-}
 
-function PremiumSection() {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1">
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">💎</div>
-            <h4 className="font-semibold text-gray-900">
-              Unlock Premium Features
-            </h4>
-          </div>
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
-            {premiumFeatures.map((f) => (
-              <div key={f.id} className="flex items-start gap-2">
-                <CheckCircle className="text-emerald-400 " size={20} />
-                <div>{f.text}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center lg:justify-end">
-          <button className="bg-emerald-600 text-white px-5 py-2 rounded-md font-semibold hover:brightness-95">
-            Upgrade to Premium
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EventCard({ item }: { item: EventItem }) {
-  return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="text-xs text-sky-500 font-medium">{item.date}</div>
-          <h5 className="text-gray-900 font-semibold mt-2">{item.title}</h5>
-          <div className="flex items-center text-sm text-gray-500 mt-2">
-            <MapPin size={14} className="mr-1 text-rose-500" />
-            <span>{item.location}</span>
-          </div>
-          <div className="text-sm text-emerald-600 mt-2">
-            {item.spots} spots available
-          </div>
-        </div>
-        <div className="self-end">
-          <button className="border border-emerald-400 text-emerald-600 px-4 py-2 rounded-md text-sm font-semibold hover:bg-emerald-50">
-            Register For Free
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ------------------------- Page -------------------------
-export default function Regular() {
-  return (
-    <div className="min-h-screen bg-gray-50 p-2 lg:p-1">
-      <div className="max-w-7xl mx-auto">
-        {/* Top two cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <TipCard />
-          <AITrainerCard />
-        </div>
-
-        {/* Premium */}
-        <div className="mb-6">
-          <PremiumSection />
-        </div>
-
-        {/* Free Outdoor Events header */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">🌤️</div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Free Outdoor Events
-            </h3>
-          </div>
-        </div>
-
-        {/* Event grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((ev) => (
-            <EventCard key={ev.id} item={ev} />
-          ))}
-        </div>
-      </div>
+      {/* Free events */}
+      <EventsSection title="Free Outdoor Events Near You" filter="Free" limit={6} />
     </div>
   );
 }

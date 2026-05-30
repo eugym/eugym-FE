@@ -1,7 +1,7 @@
 "use client";
 import Dashboardstats from "./stats/page";
 
-export default async function DashboardPage() {
+export default function DashboardPage() {
   return (
     <>
       <Dashboardstats />

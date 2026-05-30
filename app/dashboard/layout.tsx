@@ -1,32 +1,44 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import DashboardShell from "./components/DashboardShell";
+import type { User } from "@/app/store/auth";
 
-import SideNav from "./components/sideNav";
-import { useState } from "react";
-import TopNav from "./components/topNav";
-import ProtectedRoute from "../auth/ProtectedRoute";
-// import { useAuthStore } from "@/app/store/auth";
-import { getUserRole } from "../api/lib/role";
-// import { UserRole } from "@/types/user";
-interface DashboardLayoutProps {
-  children: React.ReactNode;
+function parseUserCookie(raw: string): User | null {
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed?.id || !parsed?.role) return null;
+    return parsed as User;
+  } catch {
+    return null;
+  }
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
 
-  // console.log("role", role);
-  const userRole = getUserRole();
+  const sessionCookie = cookieStore.get("auth_session");
+  const userCookie = cookieStore.get("user_info");
+
+  // No token → definitely not authenticated
+  if (!sessionCookie?.value) {
+    redirect("/auth/login");
+  }
+
+  // Parse user from the cookie set at login — no backend call needed
+  const user = userCookie?.value ? parseUserCookie(userCookie.value) : null;
+
+  if (!user) {
+    // user_info cookie missing or corrupted — treat as expired session
+    redirect("/auth/login");
+  }
 
   return (
-    <div className="flex h-screen w-full">
-      <SideNav isOpen={isOpen} setIsOpen={setIsOpen} role={userRole as any} />
-      <div className="flex flex-col flex-1 h-full">
-        <TopNav isOpen={isOpen} setIsOpen={setIsOpen} />
-        <main className="flex-1 overflow-y-auto bg-gray-50">
-          {/* {children} */}
-          <ProtectedRoute>{children}</ProtectedRoute>
-        </main>
-      </div>
-    </div>
+    <DashboardShell user={user} token={sessionCookie.value}>
+      {children}
+    </DashboardShell>
   );
 }

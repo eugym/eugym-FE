@@ -1,51 +1,50 @@
 "use client";
 
-import { Upload, UserRoundPen } from "lucide-react";
+import { Camera } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface AvatarUploadProps {
-  avatar?: string; // optional
+  avatar?: string;
+  initials?: string;
 }
 
-export default function AvatarUpload({ avatar }: AvatarUploadProps) {
+export default function AvatarUpload({ avatar, initials = "U" }: AvatarUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (avatar) {
-      setPreview(avatar);
-    }
+    if (avatar) setPreview(avatar);
   }, [avatar]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const objectUrl = URL.createObjectURL(file);
-    setPreview(objectUrl);
+    setPreview(URL.createObjectURL(file));
   };
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {/* Avatar preview */}
-      {preview ? (
-        <img
-          src={preview}
-          alt="Avatar"
-          className="h-20 w-20 rounded-full object-cover"
-          onError={() => setPreview(null)} // fallback if image fails
-        />
-      ) : (
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-          <UserRoundPen size={32} />
+      <label className="cursor-pointer group">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-md">
+          {preview ? (
+            <img
+              src={preview}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              onError={() => setPreview(null)}
+            />
+          ) : (
+            <div className="w-full h-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-2xl font-bold select-none">
+              {initials}
+            </div>
+          )}
+          {/* Camera overlay */}
+          <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <Camera size={22} className="text-white" />
+          </div>
         </div>
-      )}
-
-      {/* Upload button */}
-      <label className="flex cursor-pointer items-center gap-2 rounded-md border border-amber-100 px-2 py-1 text-sm">
-        <Upload size={16} />
-        Profile image
         <input type="file" accept="image/*" hidden onChange={onChange} />
       </label>
+      <p className="text-xs text-gray-400">Click to change photo</p>
     </div>
   );
 }

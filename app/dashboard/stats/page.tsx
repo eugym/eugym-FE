@@ -1,45 +1,41 @@
 "use client";
-// import Regular from "../user/regular/page";
+
+import { useDashboardUser } from "../components/DashboardContext";
+import Admin            from "../admin/page";
+import RegularDashboard from "../user/regular/page";
 import StandardDashboard from "../user/standard/page";
-import PremiumUser from "../user/premium/page";
-import { getUserRole } from "@/app/api/lib/role";
-import UnauthorizedPage from "@/components/UnauthorizedPage";
-import Admin from "../admin/page";
-import UserDashboard from "../user/page";
+import PremiumDashboard  from "../user/premium/page";
+import TrainerDashboard  from "../user/trainers/page";
+import AffiliateDashboard from "../affiliate/page";
 import FeatureUnavailable from "@/components/FeatureUnavailable/FeatureUnavailable";
 
-function Dashboardstats() {
-  // const [role, setRole] = useState("admin");
-  // const [role, setRole] = useState("trainer");
-  // const [role, setRole] = useState("affiliate");
-  // const [role, setRole] = useState("standard");
-  // const [role, setRole] = useState("premium");
-  // const [role, setRole] = useState("regular");
+export default function DashboardStats() {
+  const user = useDashboardUser();
 
-  const role = getUserRole();
-  switch (role as string) {
+  switch (user.role) {
+    case "SUPER_ADMIN":
     case "ADMIN":
       return <Admin />;
-    case "AFFILIATE_PARTNER":
-      return (
-        <FeatureUnavailable showBackButton title="Affiliate Partner page" />
-      );
-    case "TRAINER":
-      return <FeatureUnavailable title=" Trianer dashboard" showBackButton />;
+
     case "REGULAR":
-      // return <Regular />;
-      return <UserDashboard />;
+      return <RegularDashboard />;
+
     case "STANDARD":
       return <StandardDashboard />;
+
     case "PREMIUM":
-      // return <PremiumUser />;
-      return <UserDashboard />;
+      return <PremiumDashboard />;
+
+    case "TRAINER":
+      return <TrainerDashboard />;
+
+    case "AFFILIATE_PARTNER":
+      return <AffiliateDashboard />;
+
     case "CORPORATE_ADMIN":
-      return <FeatureUnavailable title="CORPORATE ADMIN" />;
+      return <FeatureUnavailable title="Corporate Admin Dashboard" showBackButton />;
 
     default:
-      return UnauthorizedPage();
+      return <FeatureUnavailable title="Dashboard unavailable" showBackButton />;
   }
 }
-
-export default Dashboardstats;
