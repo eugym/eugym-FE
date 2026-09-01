@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useBackendQuery } from "@/hooks/useBackend";
 import {
   Users, UserCheck, Repeat, CreditCard,
   Building2, TrendingUp, Activity,
@@ -25,13 +25,12 @@ interface AdminStats {
   inactiveUsers: number;
 }
 
-// ---------- data fetching ----------
-async function fetchStats(): Promise<AdminStats> {
-  const res = await fetch("/api/users/stats", { cache: "no-store" });
-  if (!res.ok) throw new Error(`Stats fetch failed (${res.status})`);
-  const json = await res.json();
-  return json.data;
-}
+// Stats come from GET /admin/stats via the /api/backend/* proxy.
+//
+// NOTE: the backend currently returns { totalMembers, monthlyRevenue,
+// todayBookings, pendingPOS, lowStockItems, activeTrainers } — not the
+// per-tier breakdown this page charts. The tier counts below will read 0 until
+// the endpoint is widened. Tracked for the backend module.
 
 // ---------- helpers ----------
 function getGreeting() {
@@ -62,10 +61,7 @@ const CORP_BODY: ITableBody[] = [
 export default function Admin() {
   const user = useDashboardUser();
 
-  const { data: stats, isLoading } = useQuery<AdminStats>({
-    queryKey: ["admin-stats"],
-    queryFn: fetchStats,
-    retry: 1,
+  const { data: stats, isLoading } = useBackendQuery<AdminStats>("admin/stats", {
     staleTime: 1000 * 60 * 5, // 5 min
   });
 

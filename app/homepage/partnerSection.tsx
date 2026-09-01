@@ -1,45 +1,38 @@
-"use client";
-
-import { motion } from "framer-motion";
-import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function PartnerSection() {
   return (
-    <section className="bg-gray-50 py-20">
-      <div className="max-w-3xl mx-auto px-6 text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6"
-        >
-          Partner with Nigeria’s Largest Fitness Access Network
-        </motion.h2>
+    <section className="bg-(--plate-ground) py-20">
+      <div className="mx-auto max-w-3xl px-6 text-center">
+        <h2 className="display mb-6 text-3xl md:text-4xl lg:text-5xl">
+          Partner with Nigeria&rsquo;s{" "}
+          {/* Same accent as the hero, trainers and store headings, so the green
+              reads as one system rather than four separate decisions. */}
+          <span className="text-(--plate-green)">Largest Fitness</span> Access
+          Network
+        </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-gray-600 leading-relaxed text-sm md:text-base mb-8"
-        >
+        <p className="mx-auto mb-8 max-w-[62ch] text-sm leading-relaxed text-(--plate-steel) md:text-base">
           Eugym makes your hotel gym a destination for fitness travelers
-          nationwide. As an affiliate partner, you’ll host verified Eugym
+          nationwide. As an affiliate partner, you&rsquo;ll host verified Eugym
           members whenever they travel—driving consistent usage of your
           facilities, enhancing guest satisfaction, and boosting your brand
           visibility.
-        </motion.p>
+        </p>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.2 }}
-          onClick={() => toast.error("Not available at this time")}
-          className="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded-md transition"
+        {/* A real anchor rather than a button with a router.push: this is
+            navigation, so it should middle-click, open in a new tab, and be
+            followable. The classes mirror Button's primary variant — the
+            component renders a <button>, which cannot legally nest in a link.
+
+            Leading slash matters: "auth/company-register" would resolve
+            relative to the current path and 404. */}
+        <Link
+          href="/auth/company-register"
+          className="relative inline-flex min-w-[14rem] items-center justify-center gap-2 rounded-(--plate-radius) border border-(--plate-green-deep) bg-(--plate-green) px-6 py-2.5 text-sm font-semibold tracking-tight text-white transition-[background-color,color,border-color,transform] duration-150 ease-out select-none hover:bg-(--plate-green-deep) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--plate-iron) active:translate-y-px"
         >
           Become an Affiliate
-        </motion.button>
+        </Link>
       </div>
     </section>
   );

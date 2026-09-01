@@ -1,5 +1,7 @@
 import { Mail, Phone, MapPin, Youtube, X, Facebook } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/public/asset/logo.png";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -10,9 +12,21 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         {/* Column 1 */}
         <div>
-          <h3 className="text-white text-xl font-semibold mb-3">
-            Eugym Fitness
-          </h3>
+          <div className="mb-3 flex items-center gap-3">
+            {/* The logo artwork is a full lockup — gold barbell plus a black
+                EUGYM FITNESS wordmark — so it needs a light chip to sit on.
+                Placed straight onto #0B0F19 the wordmark inside it vanishes. */}
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-white p-1.5">
+              <Image
+                src={logo}
+                alt=""
+                width={48}
+                height={48}
+                className="h-full w-full object-contain"
+              />
+            </span>
+            <h3 className="text-xl font-semibold text-white">Eugym Fitness</h3>
+          </div>
           <p className="text-sm leading-relaxed text-gray-400">
             Nigeria&apos;s premier fitness network connecting you to premium
             gyms, expert trainers, and wellness experiences nationwide.

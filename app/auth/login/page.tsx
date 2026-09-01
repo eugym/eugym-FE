@@ -166,8 +166,8 @@
 //           >
 //             Don’t have an account?{" "}
 //             <Link
-//               href="/auth/user_register"
-//               className="text-primary-lite hover:underline"
+//               href="/auth/register"
+//               className="text-(--plate-green-deep) hover:underline"
 //             >
 //               Sign Up
 //             </Link>

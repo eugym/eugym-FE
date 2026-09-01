@@ -1,23 +1,26 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState } from "react";
-import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { ChevronDown, User, LogOut } from "lucide-react";
+import Avatar, { initialsFromName } from "@/components/ui/Avatar";
 
 interface Props {
   fullName?: string;
   role: string;
-  avatarUrl?: string | StaticImageData;
   onLogout: () => void;
 }
 
-export default function Profile({
-  fullName,
-  avatarUrl,
-  role,
-  onLogout,
-}: Props) {
+/**
+ * Header identity control.
+ *
+ * The avatar was an <Image> whose source came from the caller — and TopNav
+ * passed a bundled stock photo of a trainer, so every signed-in user saw the
+ * same stranger's face. Its fallback, `/images/avatar-placeholder.png`, is not
+ * present in `public/` either, so a missing avatar rendered a broken image.
+ * Initials are derived from the name already being displayed.
+ */
+export default function Profile({ fullName, role, onLogout }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,53 +37,82 @@ export default function Profile({
       document.removeEventListener("pointerdown", handleClickOutside);
   }, []);
 
-  const src = !avatarUrl ? "/images/avatar-placeholder.png" : avatarUrl;
+  // Escape closes the menu — a dropdown you can only dismiss with the mouse
+  // strands keyboard users inside it.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const roleLabel = role?.replace(/_/g, " ") ?? "";
+
   return (
     <div ref={ref} className="relative">
       {/* Trigger */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center sm:justify-betweens justify-ends gap-1 rounded-lg sm:px-1 px-1 hover:bg-gray-100"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex items-center gap-2 rounded-(--plate-radius) px-2 py-1.5 transition-colors hover:bg-black/[0.04] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--plate-iron)"
       >
-        <div className="flex flow-row gap-3 items-center align-middle mx-2">
-          <Image src={src} alt="Profile" className="rounded-full w-8 h-8 " />
+        <Avatar initials={initialsFromName(fullName)} size="sm" />
 
-          <div
-            className="flex-col hidden sm:block "
-            suppressHydrationWarning={true}
-          >
-            <div className="flex flex-col">
-              <span className="font-semibold">{fullName}</span>
-              <span className="text-[12px] ">{role}</span>
-            </div>
-          </div>
-        </div>
+        <span className="hidden text-left leading-tight sm:block">
+          <span className="block text-sm font-semibold text-(--plate-iron)">
+            {fullName}
+          </span>
+          <span className="block text-[11px] capitalize text-(--plate-steel)">
+            {roleLabel}
+          </span>
+        </span>
 
         <ChevronDown
-          // size={16}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
+          size={16}
+          className={`text-(--plate-steel) transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+          aria-hidden="true"
         />
       </button>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-lg bg-white shadow-lg">
-          <div className="p-2 pl-4 block sm:hidden shadow-sm">
-            <div className="flex flex-col">
-              <span className="font-semibold">{fullName}</span>
-              <span className="text-[12px] ">{role}</span>
-            </div>
+        <div
+          role="menu"
+          className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-(--plate-radius) border border-(--plate-rule) bg-(--plate-surface) shadow-(--plate-shadow)"
+        >
+          {/* On phones the trigger hides the name, so the menu restates it. */}
+          <div className="flex items-center gap-3 border-b border-(--plate-rule) px-4 py-3 sm:hidden">
+            <Avatar initials={initialsFromName(fullName)} size="sm" />
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-sm font-semibold text-(--plate-iron)">
+                {fullName}
+              </span>
+              <span className="block text-[11px] capitalize text-(--plate-steel)">
+                {roleLabel}
+              </span>
+            </span>
           </div>
-          <MenuItem icon={<User size={16} />} href="profile" label="Profile" />
 
-          <div className="my-1 h-px bg-gray-100" />
+          <MenuItem
+            icon={<User size={16} />}
+            href="/dashboard/profile"
+            label="Profile"
+            onNavigate={() => setOpen(false)}
+          />
+
+          <div className="h-px bg-(--plate-rule)" />
 
           <MenuItem
             icon={<LogOut size={16} />}
             label="Logout"
             danger
             onClick={() => {
-              setOpen(false); // close dropdown
+              setOpen(false);
               onLogout();
             }}
           />
@@ -96,28 +128,38 @@ interface MenuItemProps {
   danger?: boolean;
   icon?: ReactNode;
   onClick?: () => void;
+  onNavigate?: () => void;
 }
 
-const MenuItem = ({ href, label, danger, icon, onClick }: MenuItemProps) => {
-  const baseClasses = `flex w-full items-center gap-3 px-4 py-2 text-sm transition
-    ${
-      danger
-        ? "text-red-600 hover:bg-red-50"
-        : "text-gray-700 hover:bg-gray-100"
-    }`;
+const MenuItem = ({
+  href,
+  label,
+  danger,
+  icon,
+  onClick,
+  onNavigate,
+}: MenuItemProps) => {
+  const baseClasses = `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+    danger
+      ? "text-red-700 hover:bg-red-50"
+      : "text-(--plate-iron) hover:bg-black/[0.04]"
+  }`;
 
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={baseClasses}>
-        {icon && <span className="h-4 w-4">{icon}</span>}
+      <button type="button" role="menuitem" onClick={onClick} className={baseClasses}>
+        {icon && <span className="shrink-0">{icon}</span>}
         <span>{label}</span>
       </button>
     );
   }
 
   return (
-    <Link href={href!} className={baseClasses}>
-      {icon && <span className="h-4 w-4">{icon}</span>}
+    // Was href="profile" — a relative path, so it resolved against whatever
+    // page you were on (/dashboard/store/profile, and so forth) instead of the
+    // profile page.
+    <Link href={href!} role="menuitem" onClick={onNavigate} className={baseClasses}>
+      {icon && <span className="shrink-0">{icon}</span>}
       <span>{label}</span>
     </Link>
   );

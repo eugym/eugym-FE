@@ -10,43 +10,122 @@ import Button from "@/components/ui/Button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRegister } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import axios from "axios";
+import { parseAuthError } from "@/app/api/lib/authError";
+
+/** Which tab owns each field, so a failed submit can jump back to it. */
+const ACCOUNT_FIELDS = ["firstName", "lastName", "phone", "email"] as const;
 
 export default function UserRegister() {
   const [activeTab, setActiveTab] = useState("Account");
-  const [loading, setLoading] = useState(false);
-  const register = useRegister();
-  const router = useRouter();
+  const { mutateAsync: register, isPending: loading } = useRegister();
 
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "REGULAR",
   });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (name: string, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
+    // Clear this field's error as soon as it is edited — an error that outlives
+    // its cause reads as a broken form.
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  };
+
+  /** Catch what we can before spending a request on it. */
+  const validateAccount = () => {
+    const found: Record<string, string> = {};
+    if (form.firstName.trim().length < 2)
+      found.firstName = "First name needs at least 2 characters";
+    if (form.lastName.trim().length < 2)
+      found.lastName = "Last name needs at least 2 characters";
+    if (form.phone.replace(/\D/g, "").length < 10)
+      found.phone = "Enter a valid phone number";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      found.email = "Enter a valid email address";
+    return found;
+  };
+
+  const validatePassword = () => {
+    const found: Record<string, string> = {};
+    if (form.password.length < 8)
+      found.password = "Password must be at least 8 characters";
+    else if (!/[A-Z]/.test(form.password))
+      found.password = "Password needs at least one capital letter";
+    else if (!/[0-9]/.test(form.password))
+      found.password = "Password needs at least one number";
+    if (form.confirmPassword !== form.password)
+      found.confirmPassword = "Passwords don't match";
+    return found;
+  };
+
+  const onContinue = () => {
+    const found = validateAccount();
+    if (Object.keys(found).length) {
+      setErrors(found);
+      toast.error("Fix the highlighted fields to continue");
+      return;
+    }
+    setErrors({});
+    setActiveTab("Password");
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      await register.mutateAsync(form);
-      toast.success("Registration successful");
-      router.push("/auth/login");
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err?.response?.data?.error?.message ?? "Login failed");
-      }
+
+    // Re-check the account tab too: the user can go back and edit it.
+    const found = { ...validateAccount(), ...validatePassword() };
+    if (Object.keys(found).length) {
+      setErrors(found);
+      const onAccountTab = ACCOUNT_FIELDS.some((f) => f in found);
+      if (onAccountTab) setActiveTab("Account");
+      toast.error("Fix the highlighted fields to continue");
+      return;
     }
-    setLoading(false);
+
+    setErrors({});
+
+    try {
+      await register({
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        password: form.password,
+      });
+      toast.success("Welcome to Eugym");
+      // Hard navigation so the browser sends the new auth_session cookie on a
+      // fresh request, letting the dashboard Server Component see it immediately.
+      window.location.href = "/dashboard/stats";
+    } catch (err) {
+      const { message, fieldErrors, code } = parseAuthError(err);
+
+      // A duplicate email comes back as CONFLICT with no field map. Left alone it
+      // toasts "An account with this email already exists" while the user is on
+      // the Password tab, with no email field in sight — so attribute it here.
+      const resolved =
+        code === "CONFLICT" && !Object.keys(fieldErrors).length
+          ? { email: message }
+          : fieldErrors;
+
+      setErrors(resolved);
+      toast.error(message);
+
+      // Point the user at the tab that actually holds the problem, otherwise the
+      // message names a field that isn't on screen.
+      if (ACCOUNT_FIELDS.some((f) => f in resolved)) setActiveTab("Account");
+    }
   };
 
   return (
@@ -56,7 +135,7 @@ export default function UserRegister() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row min-h-screen w-full overflow-hidden bg-white"
+        className="flex min-h-screen w-full flex-col overflow-hidden bg-(--plate-ground) md:flex-row"
       >
         {/* LEFT FORM SECTION */}
         <motion.div
@@ -84,10 +163,10 @@ export default function UserRegister() {
             transition={{ delay: 0.3 }}
             className="text-center mb-6 "
           >
-            <h1 className="text-2xl font-semibold text-gray-800">
+            <h1 className="stamped text-3xl font-bold">
               Welcome to Eugym
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-(--plate-steel)">
               Please complete your registration.
             </p>
           </motion.div>
@@ -112,13 +191,13 @@ export default function UserRegister() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="w-full max-w-md shadow-sm border border-gray-200 bg-gray-50 rounded-xl p-6"
+            className="w-full max-w-md rounded-(--plate-radius) border border-(--plate-rule) bg-(--plate-surface) p-6"
           >
             <form onSubmit={onSubmit}>
               {activeTab === "Account" ? (
                 <>
                   {/* <form onSubmit={onSubmit} className="flex flex-col gap-3 space-y-5"></form>   */}
-                  <h2 className="text-gray-800 font-medium mb-4">
+                  <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-(--plate-steel)">
                     Account Details
                   </h2>
 
@@ -133,7 +212,9 @@ export default function UserRegister() {
                       <InputField
                         label="First Name"
                         placeholder="Martins"
-                        value={form?.firstName}
+                        autoComplete="given-name"
+                        value={form.firstName}
+                        error={errors.firstName}
                         onChange={(val) => handleChange("firstName", val)}
                       />
                     </motion.div>
@@ -146,7 +227,9 @@ export default function UserRegister() {
                       <InputField
                         label="Last Name"
                         placeholder="Chinedu"
-                        value={form?.lastName}
+                        autoComplete="family-name"
+                        value={form.lastName}
+                        error={errors.lastName}
                         onChange={(val) => handleChange("lastName", val)}
                       />
                     </motion.div>
@@ -159,26 +242,30 @@ export default function UserRegister() {
                     transition={{ delay: 0.8 }}
                     className="space-y-4"
                   >
+                    {/* type="tel", not "number" — a number input drops the leading
+                        zero that every Nigerian mobile number starts with. */}
                     <InputField
                       label="Phone Number"
                       placeholder="09055555332"
-                      type="number"
-                      value={form?.phoneNumber}
-                      onChange={(val) => handleChange("phoneNumber", val)}
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      value={form.phone}
+                      error={errors.phone}
+                      onChange={(val) => handleChange("phone", val)}
                     />
 
                     <InputField
                       label="Email Address"
                       placeholder="example@gmail.com"
                       type="email"
-                      value={form?.email}
+                      autoComplete="email"
+                      value={form.email}
+                      error={errors.email}
                       onChange={(val) => handleChange("email", val)}
                     />
 
-                    <Button
-                      onClick={() => setActiveTab("Password")}
-                      className="w-full"
-                    >
+                    <Button onClick={onContinue} className="w-full">
                       Continue
                     </Button>
                   </motion.div>
@@ -198,7 +285,7 @@ export default function UserRegister() {
                 </>
               ) : (
                 <>
-                  <h2 className="text-gray-800 font-medium mb-4">
+                  <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-(--plate-steel)">
                     Set Your Password
                   </h2>
 
@@ -211,7 +298,9 @@ export default function UserRegister() {
                       <InputField
                         label="Password"
                         type="password"
-                        value={form?.password}
+                        autoComplete="new-password"
+                        value={form.password}
+                        error={errors.password}
                         onChange={(val) => handleChange("password", val)}
                       />
                     </motion.div>
@@ -224,13 +313,19 @@ export default function UserRegister() {
                       <InputField
                         label="Confirm Password"
                         type="password"
-                        value={form?.confirmPassword}
+                        autoComplete="new-password"
+                        value={form.confirmPassword}
+                        error={errors.confirmPassword}
                         onChange={(val) => handleChange("confirmPassword", val)}
                       />
                     </motion.div>
 
+                    <p className="text-xs text-gray-500 leading-relaxed">
+                      At least 8 characters, with one capital letter and one number.
+                    </p>
+
                     <Button className="w-full" loading={loading} type="submit">
-                      Submit
+                      Create Account
                     </Button>
                   </div>
                 </>
@@ -255,7 +350,7 @@ export default function UserRegister() {
             Have an account?{" "}
             <Link
               href="/auth/login"
-              className="text-primary-lite hover:underline"
+              className="text-(--plate-green-deep) hover:underline"
             >
               Login
             </Link>

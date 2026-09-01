@@ -1,27 +1,29 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Brain, CalendarDays, Users } from "lucide-react";
 import Button from "@/components/ui/Button";
 import CreateAccountModal from "@/components/modals/createAccountModal";
 import { useState } from "react";
 
-const googleFormLink = "https://forms.gle/vpvqG2h8sun2mAp97";
+// Sign-up previously went to an external Google Form
+// (https://forms.gle/vpvqG2h8sun2mAp97). It now opens the in-app account
+// modal; the form helper was left behind unused and is gone.
+
 const features = [
   {
-    icon: <Brain className="w-8 h-8 text-primary" />,
+    icon: <Brain className="h-9 w-9" />,
     title: "AI Fitness Trainer",
     description:
       "Personalized workout recommendations based on your goals and fitness level.",
   },
   {
-    icon: <CalendarDays className="w-8 h-8 text-primary" />,
+    icon: <CalendarDays className="h-9 w-9" />,
     title: "Daily Fitness Tips",
     description:
       "Expert nutrition advice, workout tips, and wellness content delivered daily.",
   },
   {
-    icon: <Users className="w-8 h-8 text-primary" />,
+    icon: <Users className="h-9 w-9" />,
     title: "Outdoor Events",
     description:
       "Join free community workouts, yoga sessions, and fitness challenges.",
@@ -31,51 +33,42 @@ const features = [
 export default function FitnessSection() {
   const [open, setOpen] = useState(false);
 
-  const registrationLink = (url: string) => {
-    window.open(url, "_blank");
-  };
   return (
     <>
-      {" "}
-      {/* <section className="bg-primary text-white py-20 text-center bg-linear-to-t from-primary-lite to-primary "> */}
-      <section className="bg-primary text-white py-20 text-center ">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-            {features.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center"
-              >
-                <div className="bg-white rounded-full p-4 mb-4">
-                  {item.icon}
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-white/90 text-sm max-w-xs">
-                  {item.description}
+      {/* --plate-green: the same fill as the primary button.
+          This previously asked for bg-primary, which emits no CSS at all —
+          Tailwind v4 never loads tailwind.config.ts without an @config
+          directive — so the section painted nothing and fell through to
+          --plate-ground, leaving white text and white icons on a near-white
+          field at roughly 1.04:1. */}
+      <section className="bg-(--plate-green) py-20 text-center text-white">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-3">
+            {features.map((feature) => (
+              <div key={feature.title} className="flex flex-col items-center">
+                {/* A machined tile, not a pill — DESIGN.md reserves pills for
+                    status chips. The icon takes the band's own colour, so the
+                    tile reads as punched out of the surface. */}
+                <span className="strike-in mb-5 flex h-20 w-20 items-center justify-center rounded-(--plate-radius) bg-white text-(--plate-green-deep) shadow-[var(--plate-shadow)] transition-transform duration-300 ease-[cubic-bezier(0.2,0.7,0.3,1)] hover:scale-110">
+                  {feature.icon}
+                </span>
+                <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
+                <p className="max-w-xs text-sm leading-relaxed text-white">
+                  {feature.description}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
+          {/* The secondary variant is already a white panel with iron type,
+              which is exactly right on a green field. */}
+          <Button
+            variant="secondary"
+            onClick={() => setOpen(true)}
+            className="min-w-[16rem]"
           >
-            <Button
-              variant="secondary"
-              onClick={() => setOpen(true)}
-              // onClick={() => registrationLink(googleFormLink)}
-              className="bg-white text-primary hover:bg-green-100 text-base px-6 py-3 rounded-lg font-semibold flex justify-center justify-self-center"
-            >
-              Join For Free
-            </Button>
-          </motion.div>
+            Join For Free
+          </Button>
         </div>
       </section>
       <CreateAccountModal isOpen={open} onClose={() => setOpen(false)} />

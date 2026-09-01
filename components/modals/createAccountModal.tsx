@@ -2,7 +2,6 @@
 
 import { ArrowRight, CircleUser, Users, X } from "lucide-react";
 import Modal from "./modal";
-import Image from "next/image";
 interface CreateAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -43,7 +42,7 @@ export default function CreateAccountModal({
       <div className="p-6">
         <h2 className="text-2xl font-semibold text-gray-800">Create Account</h2>
         <p className="text-gray-500 text-sm mb-6">Choose Your Account Type:</p>
-        <a href={"/auth/user_register"}>
+        <a href={"/auth/register"}>
           <button className="w-full flex justify-between items-center p-4 border border-gray-300 rounded-xl mb-3 hover:bg-gray-50 transition ">
             <div className="flex items-start space-x-3">
               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
@@ -61,7 +60,7 @@ export default function CreateAccountModal({
             <ArrowRight size={18} className="text-gray-400" />
           </button>
         </a>
-        <a href={"/auth/company_register"}>
+        <a href={"/auth/company-register"}>
           <button className="w-full flex justify-between items-center p-4 border border-gray-300 rounded-xl mb-3 hover:bg-gray-50 transition">
             <div className="flex items-start space-x-3">
               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
