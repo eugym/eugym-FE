@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface ProductCardProps {
@@ -10,28 +9,35 @@ interface ProductCardProps {
   image: string | StaticImport;
 }
 
+/**
+ * Hover is CSS rather than framer-motion, matching the rest of the homepage —
+ * this was the last component still animating through JavaScript.
+ */
 const ProductCard: React.FC<ProductCardProps> = ({ name, price, image }) => {
   return (
-    <motion.div
-      whileHover={{ y: -4, scale: 1.02 }}
-      transition={{ duration: 0.2 }}
-      className="bg-white border w-[20rem] border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center text-center p-4 "
-    >
-      <div className="w-full h-56 relative mb-4">
+    <div className="group flex h-full w-full flex-col overflow-hidden rounded-[14px] border border-(--plate-rule) bg-(--plate-surface) text-center shadow-[var(--plate-shadow)] transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.2,0.7,0.3,1)] hover:-translate-y-1.5 hover:border-(--plate-green) hover:shadow-[var(--plate-shadow-lift)]">
+      {/* The product sits on the ground colour so a cut-out photo reads as an
+          object on a surface rather than floating on the card. */}
+      <div className="relative h-56 w-full bg-(--plate-ground)">
         <Image
           src={image}
           alt={name}
           fill
-          className="object-contain p-2"
-          sizes="(max-width: 768px) 100vw, 25vw"
+          className="object-contain p-4 transition-transform duration-[600ms] ease-[cubic-bezier(0.2,0.7,0.3,1)] group-hover:scale-[1.05]"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
       </div>
-      <h3 className="text-sm font-semibold text-gray-800">{name}</h3>
-      <p className="text-gray-700 font-medium mt-1">{price}</p>
-      <button className="mt-2 text-green-500 text-sm font-medium hover:text-green-600 transition">
-        Add to Cart
-      </button>
-    </motion.div>
+
+      <div className="flex flex-1 flex-col border-t border-(--plate-rule) p-4">
+        <h3 className="text-sm font-semibold text-(--plate-iron)">{name}</h3>
+        <p className="mt-1 font-semibold text-(--plate-iron) tabular-nums">
+          {price}
+        </p>
+        <button className="mt-3 text-sm font-medium text-(--plate-green-deep) underline-offset-4 transition-colors hover:underline">
+          Add to Cart
+        </button>
+      </div>
+    </div>
   );
 };
 

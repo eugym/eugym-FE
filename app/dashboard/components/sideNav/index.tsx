@@ -40,9 +40,14 @@ export default function SideNav({ isOpen, setIsOpen, role }: SideNavProps) {
       />
 
       {/* Sidebar */}
+      {/* Surface colour comes from --sidebar-surface in globals.css so the
+          application theme can restyle the sidebar in one place. The literal
+          fallback matters: an undefined custom property invalidates the whole
+          declaration, which renders the sidebar transparent. */}
       <aside
+        style={{ background: "var(--sidebar-surface, #19b24b)" }}
         className={clsx(
-          "fixed lg:static top-0 left-0 z-50 h-full w-64 bg-[#19b24b] flex flex-col transition-transform duration-200 shrink-0",
+          "fixed lg:static top-0 left-0 z-50 h-full w-64 flex flex-col transition-transform duration-200 shrink-0",
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
@@ -70,13 +75,37 @@ export default function SideNav({ isOpen, setIsOpen, role }: SideNavProps) {
                 pathname === item.href ||
                 pathname.startsWith(item.href + "/");
 
+              const rowClass =
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors";
+
+              // Unbuilt destination: render a row, not a link. Offering a link
+              // that 404s throws the user clean out of the dashboard shell — the
+              // sidebar should say what isn't ready rather than prove it.
+              if (item.status === "soon") {
+                return (
+                  <div
+                    key={item.id}
+                    aria-disabled="true"
+                    title={`${item.label} — coming soon`}
+                    className={clsx(rowClass, "text-white/55 cursor-not-allowed")}
+                  >
+                    <span className="shrink-0 text-white/40">{item.icon}</span>
+                    <span className="flex-1 min-w-0 truncate">{item.label}</span>
+                    <span className="shrink-0 rounded-full border border-white/25 bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white/70">
+                      Soon
+                    </span>
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={item.id}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
+                  aria-current={isActive ? "page" : undefined}
                   className={clsx(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                    rowClass,
                     isActive
                       ? "bg-white text-emerald-700 shadow-sm"
                       : "text-white/80 hover:bg-white/10 hover:text-white"
@@ -85,7 +114,7 @@ export default function SideNav({ isOpen, setIsOpen, role }: SideNavProps) {
                   <span className={clsx("shrink-0", isActive ? "text-emerald-600" : "text-white/60")}>
                     {item.icon}
                   </span>
-                  {item.label}
+                  <span className="flex-1 min-w-0 truncate">{item.label}</span>
                 </Link>
               );
             })

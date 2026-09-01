@@ -18,16 +18,19 @@ export default function ProfilePage() {
   const { data, isLoading } = useProfile();
   const [activeTab, setActiveTab] = useState("info");
 
-  const profile = data?.data?.profile;
+  // The API returns the user record directly; `data.data.profile` was a level
+  // deeper than anything the endpoint has ever sent, so this was always
+  // undefined and every field rendered blank.
+  const profile = data;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="max-w-5xl mx-auto px-4 sm:px-5 py-6 space-y-6">
 
         {/* Page header */}
         <div>
-          <h1 className="text-xl font-semibold text-gray-800">Profile</h1>
-          <p className="text-sm text-gray-400 mt-0.5">
+          <h1 className="text-2xl font-semibold text-(--plate-iron)">Profile</h1>
+          <p className="mt-1 text-sm text-(--plate-steel)">
             Manage your account information and security settings
           </p>
         </div>

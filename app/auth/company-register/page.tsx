@@ -10,41 +10,79 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRegister } from "@/hooks/useAuth";
+import { parseAuthError } from "@/app/api/lib/authError";
+import { useCompanyRegister } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 export default function ComapanyRegister() {
   const [activeTab, setActiveTab] = useState("Account");
   const [loading, setLoading] = useState(false);
-  const register = useRegister();
+  const register = useCompanyRegister();
   const router = useRouter();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    phoneNumber: "",
+    phone: "",
     companyName: "",
     email: "",
     password: "",
-    confrmPassword: "",
-    role: "COMPANY",
+    confirmPassword: "",
   });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (name: string, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const found: Record<string, string> = {};
+    if (form.companyName.trim().length < 2)
+      found.companyName = "Enter your company name";
+    if (form.firstName.trim().length < 2)
+      found.firstName = "First name needs at least 2 characters";
+    if (form.lastName.trim().length < 2)
+      found.lastName = "Last name needs at least 2 characters";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      found.email = "Enter a valid email address";
+    if (form.phone.replace(/\D/g, "").length < 10)
+      found.phone = "Enter a valid phone number";
+    if (form.password.length < 8)
+      found.password = "Password must be at least 8 characters";
+    if (form.confirmPassword !== form.password)
+      found.confirmPassword = "Passwords don't match";
+
+    if (Object.keys(found).length) {
+      setErrors(found);
+      toast.error("Fix the highlighted fields to continue");
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
     try {
-      await register.mutateAsync(form);
-      toast.success("Company Registration successful");
+      await register.mutateAsync({
+        companyName: form.companyName.trim(),
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        password: form.password,
+      });
+      toast.success("Company registration successful");
       router.push("/auth/login");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err?.response?.data?.error?.message ?? "Login failed");
-      }
+      const { message, fieldErrors } = parseAuthError(err);
+      setErrors(fieldErrors);
+      toast.error(message);
     }
     setLoading(false);
   };
@@ -55,7 +93,7 @@ export default function ComapanyRegister() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col md:flex-row w-full overflow-hidden bg-white"
+      className="flex w-full flex-col overflow-hidden bg-(--plate-ground) md:flex-row"
     >
       {/* LEFT FORM SECTION */}
       <motion.div
@@ -83,10 +121,10 @@ export default function ComapanyRegister() {
           transition={{ delay: 0.3 }}
           className="text-center mb-6 "
         >
-          <h1 className="sm:text-3xl text-2xl font-semibold text-gray-800">
+          <h1 className="stamped text-2xl font-bold sm:text-3xl">
             Welcome to Eugym Fitness
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-sm text-(--plate-steel)">
             Please complete your registration.
           </p>
         </motion.div>
@@ -110,12 +148,12 @@ export default function ComapanyRegister() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="w-full max-w-md shadow-sm border border-gray-200 bg-gray-50 rounded-xl p-6 "
+          className="w-full max-w-md rounded-(--plate-radius) border border-(--plate-rule) bg-(--plate-surface) p-6"
         >
           <form onSubmit={onSubmit}>
             {activeTab === "Account" ? (
               <>
-                <h2 className="text-gray-800 font-medium mb-4">
+                <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-(--plate-steel)">
                   Account Details
                 </h2>
 
@@ -163,10 +201,12 @@ export default function ComapanyRegister() {
                     >
                       <InputField
                         label="Phone number"
-                        placeholder="0903333333"
-                        type="number"
-                        value={form?.phoneNumber}
-                        onChange={(val) => handleChange("phoneNumber", val)}
+                        placeholder="09033333333"
+                        type="tel"
+                        inputMode="tel"
+                        value={form.phone}
+                        error={errors.phone}
+                        onChange={(val) => handleChange("phone", val)}
                       />{" "}
                     </motion.div>
                     <motion.div
@@ -222,7 +262,7 @@ export default function ComapanyRegister() {
               </>
             ) : (
               <>
-                <h2 className="text-gray-800 font-medium mb-4">
+                <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-(--plate-steel)">
                   Set Your Password
                 </h2>
 
@@ -248,8 +288,9 @@ export default function ComapanyRegister() {
                     <InputField
                       label="Confirm Password"
                       type="password"
-                      value={form?.confrmPassword}
-                      onChange={(val) => handleChange("confrmPassword", val)}
+                      value={form.confirmPassword}
+                      error={errors.confirmPassword}
+                      onChange={(val) => handleChange("confirmPassword", val)}
                     />
                   </motion.div>
 
@@ -280,7 +321,7 @@ export default function ComapanyRegister() {
           Have an account?{" "}
           <Link
             href="/auth/login"
-            className="text-primary-lite hover:underline"
+            className="text-(--plate-green-deep) hover:underline"
           >
             Login
           </Link>

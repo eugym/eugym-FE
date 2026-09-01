@@ -94,8 +94,8 @@ export const MonthlyPlans: Plan[] = [
     id: "standard",
     title: "Standard",
     description: "Group classes and gym access at your designated location.",
-    price: "₦84,999",
-    priceSlash: "₦104,999",
+    price: "₦29,999",
+    priceSlash: "₦34,999",
     priceLabel: "/ month",
     highlight: true,
     features: [

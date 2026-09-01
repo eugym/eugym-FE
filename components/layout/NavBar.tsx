@@ -45,45 +45,44 @@ export default function Navbar({
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white shadow-sm w-full md:px-12">
-        <nav className="flex justify-between items-center px-4 md:px-10 py-2 ">
+      <header className="sticky top-0 z-50 w-full bg-(--plate-surface) md:px-12">
+        <nav className="flex items-center justify-between px-4 py-2 md:px-10">
           {logo}
-          {/* Desktop Links */}
-          <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
+          {/* Desktop Links — the active item is marked by a solid plate bar
+              beneath it, not a colour change alone. */}
+          <ul className="hidden items-center gap-8 text-sm font-medium text-(--plate-steel) md:flex">
             {navLinks.map(({ name, href }) => {
               const isActive = pathname === href;
               return (
-                <motion.li
-                  key={name}
-                  whileHover={{ y: -2 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <li key={name}>
                   <Link
                     href={href}
-                    className={`transition-colors duration-200 ${
-                      isActive
-                        ? "text-green-600 font-semibold border-b-2 border-green-500 pb-1"
-                        : "hover:text-green-500"
+                    aria-current={isActive ? "page" : undefined}
+                    className={`relative block py-1.5 transition-colors duration-150 hover:text-(--plate-iron) ${
+                      isActive ? "text-(--plate-iron) font-semibold" : ""
                     }`}
                   >
                     {name}
+                    {isActive && (
+                      <span className="absolute -bottom-0.5 left-0 h-[3px] w-full bg-(--plate-green)" />
+                    )}
                   </Link>
-                </motion.li>
+                </li>
               );
             })}
           </ul>
 
           {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden items-center gap-3 md:flex">
             <Link
               href={primaryAction.href}
-              className="px-5 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 transition"
+              className="rounded-(--plate-radius) border border-(--plate-rule) px-5 py-2 text-sm font-semibold text-(--plate-iron) transition-colors hover:border-(--plate-iron)"
             >
               {primaryAction.label}
             </Link>
             <button
               onClick={() => setOpenModal(true)}
-              className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+              className="rounded-(--plate-radius) border border-(--plate-green-deep) bg-(--plate-green) px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-(--plate-green-deep) active:translate-y-px"
             >
               {secondaryAction.label}
             </button>
@@ -92,11 +91,15 @@ export default function Navbar({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-2xl focus:outline-none"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            className="text-2xl text-(--plate-iron) focus:outline-none md:hidden"
           >
             {isOpen ? "✖" : "☰"}
           </button>
         </nav>
+        {/* Knurl seam: the milled edge where the header meets the page. */}
+        <div className="knurl h-[3px] w-full" aria-hidden="true" />
 
         {/* Mobile Dropdown */}
 
@@ -109,30 +112,41 @@ export default function Navbar({
           transition={{ duration: 0.3 }}
           onClick={() => setIsOpen(false)}
         >
-          <ul className="flex flex-col space-y-4 p-6 text-gray-700 font-medium bg-white">
+          <ul className="flex flex-col gap-1 bg-(--plate-surface) p-6 font-medium text-(--plate-steel)">
             {navLinks.map(({ name, href }) => {
               const isActive = pathname === href;
               return (
                 <li key={name}>
                   <Link
                     href={href}
-                    // target="_blank"
                     onClick={() => setIsOpen(false)}
-                    className={`block transition-colors duration-200 ${
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex items-center gap-3 py-2.5 transition-colors duration-150 ${
                       isActive
-                        ? "text-green-600 font-semibold"
-                        : "hover:text-green-500"
+                        ? "font-semibold text-(--plate-iron)"
+                        : "hover:text-(--plate-iron)"
                     }`}
                   >
+                    {/* Plate marker: present but blank when inactive, so rows
+                        stay aligned and colour never carries meaning alone. */}
+                    <span
+                      aria-hidden="true"
+                      className="h-5 w-1 shrink-0"
+                      style={{
+                        background: isActive
+                          ? "var(--plate-green)"
+                          : "var(--plate-rule)",
+                      }}
+                    />
                     {name}
                   </Link>
                 </li>
               );
             })}
-            <li>
+            <li className="mt-4">
               <Link
                 href={primaryAction.href}
-                className="block text-center border border-green-500 text-green-500 rounded-md py-2 hover:bg-green-50"
+                className="block rounded-(--plate-radius) border border-(--plate-rule) py-2.5 text-center font-semibold text-(--plate-iron) hover:border-(--plate-iron)"
                 onClick={() => setIsOpen(false)}
               >
                 {primaryAction.label}
@@ -140,7 +154,7 @@ export default function Navbar({
             </li>
             <li>
               <button
-                className="block text-center bg-green-500 text-white rounded-md py-2 hover:bg-green-600 w-full"
+                className="block w-full rounded-(--plate-radius) border border-(--plate-green-deep) bg-(--plate-green) py-2.5 text-center font-semibold text-white hover:bg-(--plate-green-deep)"
                 onClick={() => setOpenModal(true)}
               >
                 {secondaryAction.label}

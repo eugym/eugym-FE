@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Trainer1 from "@/public/images/trainer1.png";
 import Trainer2 from "@/public/images/trainer2.png";
 import Trainer3 from "@/public/images/trainer3.png";
@@ -41,23 +40,26 @@ const trainers = [
 
 export default function TrainersSection() {
   return (
-    <section className="py-20 bg-gray-50" id="trainers">
-      <div className="max-w-7xl mx-auto px-6 text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-5xl font-bold text-gray-900 mb-4"
+    <section className="bg-(--plate-ground) py-20" id="trainers">
+      <div className="mx-auto max-w-7xl px-6 text-center">
+        <h2
+          className="display mb-4 text-3xl md:text-4xl lg:text-5xl"
         >
-          Meet Our Expert <span className="text-accent"> Trainers</span>
-        </motion.h2>
-        <p className="text-gray-600 max-w-2xl mx-auto mb-12">
+          {/* Was text-accent, which emits no CSS: Tailwind v4 never loads
+              tailwind.config.ts without an @config directive, so the word just
+              rendered in the heading colour. */}
+          Meet Our Expert{" "}
+          <span className="text-(--plate-green)">Trainers</span>
+        </h2>
+
+        <p className="mx-auto mb-12 max-w-[60ch] text-(--plate-steel)">
           Work with certified professionals who will help you achieve your
           fitness goals safely and effectively.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8  ">
+        <div
+          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {trainers.map((trainer, i) => (
             <TrainerCard key={i} {...trainer} />
           ))}

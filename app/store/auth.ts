@@ -9,7 +9,7 @@ export type Role =
   | "REGULAR"
   | "STANDARD"
   | "PREMIUM"
-  | "visitor";
+  | "VISITOR";
 
 export interface User {
   id: string;

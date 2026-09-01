@@ -1,0 +1,40 @@
+# Normalise every text file to LF in the repository and on checkout.
+#
+# The repository is already all-LF; core.autocrlf is true on the Windows dev
+# machines, which rewrites files to CRLF on checkout and leaves the working
+# tree inconsistent with the blobs. Pinning eol=lf keeps both sides matching,
+# so diffs stay content-only and the Vercel/Linux build sees what was authored.
+* text=auto eol=lf
+
+# Explicitly text — never let content sniffing guess wrong.
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.jsx    text eol=lf
+*.json   text eol=lf
+*.css    text eol=lf
+*.md     text eol=lf
+*.svg    text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+
+# Binary — never convert, never diff as text.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.avif  binary
+*.mp4   binary
+*.webm  binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+
+# Generated: collapsed by default in GitHub reviews.
+package-lock.json linguist-generated=true

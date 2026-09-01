@@ -8,13 +8,14 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { AlertCircle } from "lucide-react";
 import { Suspense, useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { parseAuthError } from "@/app/api/lib/authError";
 
 export default function LoginForm() {
   const { mutateAsync: login, isPending: pending } = useLogin();
-  const router = useRouter();
 
   const searchParams = useSearchParams();
   const urlToken = searchParams.get("token");
@@ -24,25 +25,55 @@ export default function LoginForm() {
     token: urlToken,
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  // Failures that belong to the whole form rather than one field — a wrong
+  // password implicates neither input on its own.
+  const [formError, setFormError] = useState("");
+
   const handleChange = (name: string, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
+    setFormError("");
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const found: Record<string, string> = {};
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      found.email = "Enter a valid email address";
+    if (!form.password) found.password = "Enter your password";
+
+    if (Object.keys(found).length) {
+      setErrors(found);
+      setFormError("");
+      toast.error("Fix the highlighted fields to continue");
+      return;
+    }
+
+    setErrors({});
+    setFormError("");
+
     try {
       await login(form);
-      toast.success("Login successful");
+      toast.success("Welcome back");
       // Hard navigation ensures the browser sends the new auth_session cookie in a
       // fresh HTTP request, so the dashboard Server Component sees it on first load.
       window.location.href = "/dashboard/stats";
-    } catch (err: any) {
-      const msg =
-        err?.error?.message ??
-        err?.data?.error?.message ??
-        err?.message ??
-        "Login failed";
-      toast.error(msg);
+    } catch (err) {
+      const { message, fieldErrors } = parseAuthError(err);
+      setErrors(fieldErrors);
+
+      // Anything without a field map — bad credentials, a locked account, the API
+      // being down — is a statement about the attempt, not about one input.
+      if (!Object.keys(fieldErrors).length) setFormError(message);
+
+      toast.error(message);
     }
   };
 
@@ -53,7 +84,7 @@ export default function LoginForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex flex-col md:flex-row min-h-screen w-full overflow-hidden bg-white"
+        className="flex min-h-screen w-full flex-col overflow-hidden bg-(--plate-ground) md:flex-row"
       >
         {/* LEFT SECTION – FORM */}
         <motion.div
@@ -81,10 +112,8 @@ export default function LoginForm() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="text-center mb-4"
           >
-            <h1 className="text-3xl font-semibold text-gray-800">
-              Welcome Back
-            </h1>
-            <p className="text-gray-500 text-sm">
+            <h1 className="stamped text-3xl font-bold">Welcome Back</h1>
+            <p className="text-sm text-(--plate-steel)">
               Sign in with your email address and password.
             </p>
           </motion.div>
@@ -94,9 +123,32 @@ export default function LoginForm() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="w-full max-w-md shadow-sm border border-gray-200 bg-gray-50 rounded-xl p-6"
+            className="w-full max-w-md rounded-(--plate-radius) border border-(--plate-rule) bg-(--plate-surface) p-6"
           >
-            <h2 className="text-gray-800 font-medium mb-4">Account Details</h2>
+            {/* Knurl seam along the panel's top edge — the milled grip. */}
+            <div className="knurl -mx-6 -mt-6 mb-5 h-[3px]" aria-hidden="true" />
+            <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-(--plate-steel)">
+              Account Details
+            </h2>
+
+            {/* Form-level failure. role="alert" so it is announced the moment it
+                appears, not only when the field is next focused. */}
+            {formError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                role="alert"
+                className="mb-4 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2.5"
+              >
+                <AlertCircle
+                  size={16}
+                  className="mt-0.5 shrink-0 text-red-600"
+                  aria-hidden="true"
+                />
+                <p className="text-sm text-red-800 leading-snug">{formError}</p>
+              </motion.div>
+            )}
 
             {/* INPUTS APPEARING ONE BY ONE */}
             <div className="space-y-4">
@@ -113,7 +165,9 @@ export default function LoginForm() {
                     label="Email Address"
                     placeholder="example@gmail.com"
                     type="email"
-                    value={form?.email}
+                    autoComplete="email"
+                    value={form.email}
+                    error={errors.email}
                     onChange={(val) => handleChange("email", val)}
                   />
                 </motion.div>
@@ -126,7 +180,9 @@ export default function LoginForm() {
                   <InputField
                     label="Password"
                     type="password"
-                    value={form?.password}
+                    autoComplete="current-password"
+                    value={form.password}
+                    error={errors.password}
                     onChange={(val) => handleChange("password", val)}
                   />
                 </motion.div>
@@ -170,8 +226,8 @@ export default function LoginForm() {
           >
             Don’t have an account?{" "}
             <Link
-              href="/auth/user_register"
-              className="text-primary-lite hover:underline"
+              href="/auth/register"
+              className="text-(--plate-green-deep) hover:underline"
             >
               Sign Up
             </Link>

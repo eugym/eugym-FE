@@ -8,8 +8,6 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Modal from "@/components/modals/modal";
-import OtpInput from "../components/otp-input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForgotPassword } from "@/hooks/useAuth";
@@ -33,13 +31,14 @@ export default function ResetPassword() {
     try {
       await Forgot(form);
       toast.success("Password reset link sent to your email");
-      router.push("auth/login");
-    } catch (err: any) {
-      const msg =
-        err?.error?.message ??
-        err?.message ??
-        "Unable to send reset link";
-      toast.error(msg);
+      // Leading slash matters: without it this resolves relative to the current
+      // route and lands on /auth/reset-password/auth/login, which is a 404.
+      router.push("/auth/login");
+    } catch (err: unknown) {
+      const e = err as { error?: { message?: string }; message?: string } | null;
+      toast.error(
+        e?.error?.message ?? e?.message ?? "Unable to send reset link"
+      );
     }
   };
 
@@ -140,10 +139,10 @@ export default function ResetPassword() {
           >
             <Link
               href="/auth/login"
-              // className="text-primary-lite hover:underline mt-1 font-bold"
+              // className="text-(--plate-green-deep) hover:underline mt-1 font-bold"
             >
               Go Back to
-              <span className="text-primary-lite hover:underline font-bold mx-2">
+              <span className="text-(--plate-green-deep) hover:underline font-bold mx-2">
                 Sign In
               </span>
             </Link>

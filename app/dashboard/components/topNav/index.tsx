@@ -3,7 +3,6 @@
 import { Bell, Menu, X } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import Profile from "@/components/Profile";
-import TrainerImage from "@/public/images/trainer1.png";
 import type { User } from "@/app/store/auth";
 
 interface TopNavProps {
@@ -32,9 +31,7 @@ export default function TopNav({ isOpen, setIsOpen, user }: TopNavProps) {
 
         <Profile
           fullName={`${user.firstName} ${user.lastName}`}
-          role={user.role}
-          avatarUrl={TrainerImage}
-          onLogout={() => logout.mutate()}
+          role={user.role}          onLogout={() => logout.mutate()}
         />
       </div>
     </header>
